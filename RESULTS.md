@@ -6,6 +6,10 @@ This experiment trains the Telemanom-ESA anomaly detector on the ESA Anomaly Det
 
 The aim is a verified baseline. Our later contributions (adaptive computation, sensor reliability, incident correlation and response planning) will be measured against it.
 
+> **Comparing with other experiments.** These scores are only comparable with results that use the same protocol: ESA-ADB **Mission 1, channels 41-46**, the **official chronological split** (training before 2007, test 2007-2013) and the **official event-wise metrics** (`ESAScores`, corrected event-wise F0.5).
+>
+> Results on another mission or channel, a random or percentage split, or sample-level precision/recall/F1/PR-AUC measure a different task. They cannot be ranked against the numbers here. Sample-level F1 counts every 30-second point separately. Event-wise F0.5 counts whole anomaly events and weights false alarms more heavily.
+
 ## 2. Dataset
 
 - **Dataset:** ESA Anomaly Dataset (ESA-AD), Zenodo record 15237121, CC BY 3.0 IGO licence
