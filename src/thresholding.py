@@ -59,8 +59,10 @@ def threshold_channel(job):
 
 
 def flags_from(y_hat, values, min_error_value, workers=6):
+    """min_error_value: one number for all channels, or one per channel."""
     flags = np.zeros((len(values), values.shape[1]), dtype=np.uint8)
-    jobs = [(c, y_hat[:, [c]], values[:, [c]], min_error_value) for c in range(values.shape[1])]
+    floors = np.broadcast_to(np.asarray(min_error_value, dtype=float), (values.shape[1],))
+    jobs = [(c, y_hat[:, [c]], values[:, [c]], float(floors[c])) for c in range(values.shape[1])]
     with ProcessPoolExecutor(workers) as pool:
         for channel_idx, sequences in pool.map(threshold_channel, jobs):
             for start, end in sequences:
