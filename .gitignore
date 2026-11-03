@@ -11,3 +11,7 @@ results/run_seeds.log
 
 # Team guide stays local
 docs/guide/
+
+# Dashboard build output
+dashboard/node_modules/
+dashboard/dist/

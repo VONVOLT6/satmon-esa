@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --accent: #38e8ff;
+  --accent-2: #3b82f6;
+  --paper: #7c8db5;
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #fb7185;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 800px at 70% -10%, #0c1838 0%, #050a18 45%, #02040b 100%) fixed;
+  color: #dbe7ff;
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .glass {
+    @apply rounded-2xl border border-cyan-300/10 bg-slate-900/40 backdrop-blur-md;
+    box-shadow: inset 0 1px 0 rgba(148, 230, 255, 0.06), 0 10px 40px -20px rgba(0, 0, 0, 0.8);
+  }
+  .glass-strong {
+    @apply rounded-2xl border border-cyan-300/15 bg-slate-950/60 backdrop-blur-xl;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-300/70;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium;
+  }
+}
+
+.stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.35) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 55% 35%, rgba(180,230,255,.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 15%, rgba(255,255,255,.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 45% 92%, rgba(255,255,255,.3) 50%, transparent 51%);
+  background-size: 420px 420px;
+  opacity: .55;
+}
+
+.recharts-cartesian-grid line { stroke: rgba(148, 197, 255, 0.08); }
+.recharts-text { fill: #8fa3c7; font-size: 12px; }
+.recharts-legend-item-text { color: #b8c7e6 !important; font-size: 12px; }
+.recharts-tooltip-cursor { fill: rgba(56, 232, 255, 0.06); }
+
+.pulse-dot { animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+
+.fade-in { animation: fade .6s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #1a2847; border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot, .fade-in { animation: none; }
+  html { scroll-behavior: auto; }
+}

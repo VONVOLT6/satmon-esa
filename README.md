@@ -77,3 +77,13 @@ The unpruned variant does vary by seed, so comparisons against it need the mean 
 | Telemanom-ESA-Pruned | **0.784** (0.773-0.791) | **0.786** |
 
 Pruned passes G1 at both training lengths. Two of the five 84-month seeds raised one false alarm each, which accounts for their 0.773. The full write-up, with charts and related IEEE papers, is in [RESULTS.md](RESULTS.md).
+
+## Dashboard
+
+An interactive presentation of these results (Mission Control plus Research Results, sections A-H) lives in [dashboard/](dashboard/README.md):
+
+```bash
+cd dashboard
+npm install
+npm run dev        # http://localhost:5181
+```
