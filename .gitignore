@@ -8,3 +8,6 @@ models/**/flags_*.npy
 models/**/state.pt
 models/_aborted_run_wrong_early_stop/
 results/run_seeds.log
+
+# Team guide stays local
+docs/guide/
