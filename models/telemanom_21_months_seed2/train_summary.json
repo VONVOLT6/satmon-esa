@@ -1,0 +1,10 @@
+{
+ "dataset": "21_months",
+ "seed": 2,
+ "epochs": 54,
+ "best_val": 0.08506373063340121,
+ "last_val": 0.08525496612845135,
+ "train_seconds": 462.0928568840027,
+ "device": "cuda",
+ "torch": "2.11.0+cu128"
+}

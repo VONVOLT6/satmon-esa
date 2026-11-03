@@ -1,0 +1,47 @@
+{
+ "dataset": "84_months",
+ "seed": 4,
+ "weights": "last",
+ "configs": {
+  "Telemanom-ESA": {
+   "all": {
+    "alarming_precision": 0.8571428571428571,
+    "EW_precision": 0.0857528065402201,
+    "EW_recall": 0.9230769230769231,
+    "EW_F_0.50": 0.10475803236937987,
+    "AFF_precision": 0.6729516104501727,
+    "AFF_recall": 0.5234122389443691,
+    "AFF_F_0.50": 0.6365774543435854
+   },
+   "anomaly": {
+    "alarming_precision": 0.8,
+    "EW_precision": 0.041955306558407235,
+    "EW_recall": 0.9655172413793104,
+    "EW_F_0.50": 0.051880532786697416,
+    "AFF_precision": 0.6913736766058018,
+    "AFF_recall": 0.442464258720452,
+    "AFF_F_0.50": 0.6214536083318324
+   }
+  },
+  "Telemanom-ESA-Pruned": {
+   "all": {
+    "alarming_precision": 0.8235294117647058,
+    "EW_precision": 0.9648367147255098,
+    "EW_recall": 0.4307692307692308,
+    "EW_F_0.50": 0.7731311816997609,
+    "AFF_precision": 0.7124305065391955,
+    "AFF_recall": 0.42586615301310193,
+    "AFF_F_0.50": 0.6279246908820615
+   },
+   "anomaly": {
+    "alarming_precision": 0.8064516129032258,
+    "EW_precision": 0.9608607392527398,
+    "EW_recall": 0.8620689655172413,
+    "EW_F_0.50": 0.9393315499064343,
+    "AFF_precision": 0.9224981798274179,
+    "AFF_recall": 0.8482328245170748,
+    "AFF_F_0.50": 0.906622667216461
+   }
+  }
+ }
+}

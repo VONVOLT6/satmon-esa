@@ -1,0 +1,5 @@
+predicted 7363911 samples in 349s
+test: 7364161 samples, 2007-01-01T00:00:00.000000000 to 2014-01-01T00:00:00.000000000, 65 events, 29 anomalies
+Telemanom-ESA: F0.5 0.090 precision 0.074 recall 0.892 alarming precision 0.853 affiliation F0.5 0.616 (paper: 0.178) [158s]
+Telemanom-ESA-Pruned: F0.5 0.791 precision 0.999 recall 0.431 alarming precision 0.824 affiliation F0.5 0.631 (paper: 0.786) [113s]
+saved C:\Users\Thanishq\Desktop\projects\satmon-esa\results\telemanom_84_months_seed2_last.json

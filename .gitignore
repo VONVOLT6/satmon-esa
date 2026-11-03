@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+data/
+baseline/
+# Large per-run caches: regenerate with src/evaluate.py
+models/**/y_hat_*.npy
+models/**/flags_*.npy
+models/**/state.pt
+models/_aborted_run_wrong_early_stop/
+results/run_seeds.log

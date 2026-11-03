@@ -1,0 +1,108 @@
+predicted 7363911 samples in 827s
+test: 7364161 samples, 2007-01-01T00:00:00.000000000 to 2014-01-01T00:00:00.000000000, 65 events, 29 anomalies
+Traceback (most recent call last):
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(parent_pid=10444, pipe_handle=2236)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(parent_pid=10444, pipe_handle=2348)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(parent_pid=10444, pipe_handle=2292)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 131, in _main
+    prepare(preparation_data)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 131, in _main
+    prepare(preparation_data)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "<frozen runpy>", line 294, in run_path
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 131, in _main
+    prepare(preparation_data)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 88, in _run_code
+  File "<frozen runpy>", line 294, in run_path
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 21, in <module>
+    import torch
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 285, in <module>
+    _load_dll_libraries()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 268, in _load_dll_libraries
+    raise err
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 21, in <module>
+    import torch
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 285, in <module>
+    _load_dll_libraries()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\multiprocessing\spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+OSError: [WinError 1455] The paging file is too small for this operation to complete. Error loading "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\lib\cufft64_11.dll" or one of its dependencies.
+  File "<frozen runpy>", line 294, in run_path
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 268, in _load_dll_libraries
+    raise err
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 21, in <module>
+    import torch
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 285, in <module>
+    _load_dll_libraries()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\__init__.py", line 268, in _load_dll_libraries
+    raise err
+OSError: [WinError 1455] The paging file is too small for this operation to complete. Error loading "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\lib\cufft64_11.dll" or one of its dependencies.
+OSError: [WinError 1455] The paging file is too small for this operation to complete. Error loading "C:\Users\Thanishq\Desktop\projects\satmon-esa\.venv\Lib\site-packages\torch\lib\cufft64_11.dll" or one of its dependencies.
+Traceback (most recent call last):
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 148, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 133, in main
+    flags = flags_from(y_hat, values, min_error_value)
+  File "C:\Users\Thanishq\Desktop\projects\satmon-esa\src\evaluate.py", line 90, in flags_from
+    for channel_idx, sequences in pool.map(threshold_channel, jobs):
+                                  ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\process.py", line 620, in _chain_from_iterable_of_lists
+    for element in iterable:
+                   ^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 625, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 318, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 460, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Thanishq\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\_base.py", line 402, in __get_result
+    raise self._exception
+concurrent.futures.process.BrokenProcessPool: A process in the process pool was terminated abruptly while the future was running or pending.
+test: 7364161 samples, 2007-01-01T00:00:00.000000000 to 2014-01-01T00:00:00.000000000, 65 events, 29 anomalies
+Telemanom-ESA: F0.5 0.115 precision 0.094 recall 0.892 alarming precision 0.853 affiliation F0.5 0.650 (paper at 21 months: 0.122) [142s]
+Telemanom-ESA-Pruned: F0.5 0.801 precision 0.999 recall 0.446 alarming precision 0.829 affiliation F0.5 0.634 (paper at 21 months: 0.776) [118s]
+saved C:\Users\Thanishq\Desktop\projects\satmon-esa\results\telemanom_21_months_seed3_last.json
