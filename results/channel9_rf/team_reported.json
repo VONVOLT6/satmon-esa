@@ -1,0 +1,13 @@
+{
+ "source": "Values reported by the team on 2026-11-04 from their experiment screenshots. They are not in the result files of the teammate's repository (commit 37cefb4), so they cannot be checked against raw outputs here.",
+ "incident_detection": {
+  "total_incidents": 101,
+  "10": {"detected": 99, "missed": 2},
+  "13": {"detected": 101, "missed": 0},
+  "note": "No incident-level value was reported for the 7-feature model."
+ },
+ "model_size_mb": {"7": 2.07, "10": 1.98, "13": 1.83},
+ "prediction_latency_ms": {"7": 7.845, "10": 8.386, "13": 7.894},
+ "latency_note": "Measurement method and batch size were not reported. The runtimes in final_adaptive_test_results.json measure scoring the whole test set and are a different measurement.",
+ "not_provided": ["threshold_calibration_baseline_vs_calibrated", "monthly_recall"]
+}
