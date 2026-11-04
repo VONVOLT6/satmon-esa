@@ -164,7 +164,7 @@ export default function Improvements({ id, letter, title }: SectionProps) {
           <ul className="list-disc space-y-1.5 pl-5 text-sm text-slate-300">
             <li>Recall is essentially unchanged: {rf("7").recall.toFixed(4)} → {rf("13").recall.toFixed(4)}. Roughly three in four anomalous observations are still missed.</li>
             <li>The 10-feature model's recall is slightly <i>lower</i> than the original's ({rf("10").recall.toFixed(4)} vs {rf("7").recall.toFixed(4)}).</li>
-            <li>Speed did not improve. Reported latency is {TEAM.prediction_latency_ms["7"]} → {TEAM.prediction_latency_ms["13"]} ms, and 10 features is the slowest at {TEAM.prediction_latency_ms["10"]} ms. In the result files' whole-test-set timing, 13 features took {RF.runtime_seconds.always_13_feature.toFixed(2)} s against {RF.runtime_seconds.baseline_7_feature.toFixed(2)} s.</li>
+            <li>Speed did not improve. Reported latency is {TEAM.prediction_latency_ms["7"]} → {TEAM.prediction_latency_ms["13"]} ms per 1,000 observations, and 10 features is the slowest at {TEAM.prediction_latency_ms["10"]} ms. In the result files' whole-test-set timing, 13 features took {RF.runtime_seconds.always_13_feature.toFixed(2)} s against {RF.runtime_seconds.baseline_7_feature.toFixed(2)} s.</li>
             <li>The adaptive hybrid does not beat always running 13 features (F1 {RF.adaptive_test.hybrid.f1.toFixed(4)} vs {RF.adaptive_test.always_13.f1.toFixed(4)}).</li>
           </ul>
         </Panel>
