@@ -115,3 +115,33 @@ export function ChartTooltip({ active, payload, label, digits = 3, unit = "" }: 
 }
 
 export const axisProps = { stroke: COLORS.axis, tick: { fill: COLORS.axis, fontSize: 12 }, tickLine: false, axisLine: { stroke: "rgba(148,197,255,0.15)" } };
+
+export function Insight({ compared, indicates, improvement, why, tradeoffs }: { compared: ReactNode; indicates: ReactNode; improvement: ReactNode; why: ReactNode; tradeoffs: ReactNode }) {
+  const rows: [string, ReactNode, string][] = [
+    ["What is being compared?", compared, "text-cyan-200"],
+    ["What does the graph indicate?", indicates, "text-cyan-200"],
+    ["What did our approach improve?", improvement, "text-emerald-300"],
+    ["Why it matters for satellites", why, "text-sky-300"],
+    ["Trade-offs", tradeoffs, "text-amber-300"],
+  ];
+  return (
+    <div className="mt-4 grid gap-x-6 gap-y-3 border-t border-cyan-300/10 pt-4 text-sm leading-relaxed md:grid-cols-2 xl:grid-cols-3">
+      {rows.map(([q, a, tone]) => (
+        <div key={q}>
+          <div className={`mb-0.5 text-xs font-semibold uppercase tracking-wide ${tone}`}>{q}</div>
+          <p className="text-slate-300">{a}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function Missing({ title, needed }: { title: string; needed: ReactNode }) {
+  return (
+    <div className="glass flex flex-col items-start gap-2 border-dashed p-5">
+      <Chip tone="muted">Data not yet provided</Chip>
+      <div className="text-base font-semibold text-slate-200">{title}</div>
+      <p className="text-sm leading-relaxed text-slate-400">{needed}</p>
+    </div>
+  );
+}
