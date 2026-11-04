@@ -260,7 +260,7 @@ export default function ExperimentalAnalysis({ id, letter, title }: SectionProps
           </div>
 
           <div>
-            <div className="mb-2 flex items-center justify-between"><span className="text-sm font-semibold text-slate-200">Prediction latency (ms)</span><Chip tone="violet">team-reported</Chip></div>
+            <div className="mb-2 flex items-center justify-between"><span className="text-sm font-semibold text-slate-200">Prediction latency (ms per 1,000 observations)</span><Chip tone="violet">team-reported</Chip></div>
             <div className="h-[300px]">
               <ResponsiveContainer>
                 <BarChart data={latencyRows} margin={{ top: 24, right: 8, left: 0, bottom: 4 }}>
@@ -282,7 +282,7 @@ export default function ExperimentalAnalysis({ id, letter, title }: SectionProps
           {RF.runtime_seconds.always_13_feature.toFixed(2)} s with 13 features.
         </p>
         <Insight
-          compared="Whole incidents caught (rather than single observations), the size of each saved model, and how long one prediction takes."
+          compared="Whole incidents caught (rather than single observations), the size of each saved model, and how long each model takes to score 1,000 observations."
           indicates={<>The 13-feature model detects all {inc.total_incidents} incidents, against {inc["10"].detected} for the 10-feature model. It is also the smallest model ({TEAM.model_size_mb["13"]} MB). Its latency ({TEAM.prediction_latency_ms["13"]} ms) is about the same as the original's ({TEAM.prediction_latency_ms["7"]} ms).</>}
           improvement={<>{inc["13"].detected - inc["10"].detected} more incidents detected than the 10-feature model, a {pct(sizeChange)} smaller model than the original, and latency within {pct(latChange)} of the original.</>}
           why="Operators respond to incidents, not single data points. Catching every incident at least once matters more than flagging every anomalous reading. Small, fast models suit on-board processors and ground systems watching many satellites."
