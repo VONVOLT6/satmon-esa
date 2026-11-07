@@ -8,8 +8,7 @@ Each score is turned into a rank against the nominal training data (0 to 1).
 
 Tier 3 (on demand): Telemanom-ESA-Pruned. A trigger opens a burst of LSTM forecasts covering
 LOOKBACK + PRE samples before the trigger (LOOKBACK added after the first development run, see
-PROTOCOL.md addendum) and
-POST after it, because errors.py judges each point against the
+PROTOCOL.md addendum) and POST after it, because errors.py judges each point against the
 previous 2,100 smoothed errors. Alarms count only after the first PRE samples of a burst, once
 that history is complete. Every sample inside a burst counts as LSTM compute, padding included.
 
