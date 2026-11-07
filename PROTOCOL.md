@@ -48,8 +48,6 @@ Data: ESA-ADB Mission 1, channels 41-46. The development period exists only for 
 
 ## Addenda
 
-None yet.
-
 ### Addendum 1 (2026-11-08): C1 burst design, before any C1 test run
 
 The first C1 design opened a burst of LSTM forecasts only from the trigger onwards (plus 2,400 warm-up samples). On the development period this lost alarms whenever the cheap tier fired partway into an event. Seed 42 lost F0.5 even at 92% LSTM share (0.721 vs 0.792). Those partial results are kept in `results/c1_dev_v1_no_lookback.*`.
