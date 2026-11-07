@@ -1,0 +1,13 @@
+2026-11-08 04:01:05 start: 5523840 dev samples, baseline dev F0.5 0.7763, cheap tier 1.51 us/sample
+2026-11-08 04:02:27 seed 42 tau 0.995 full: F0.5 0.721 LSTM share 91.6% [82s]
+2026-11-08 04:03:52 seed 42 tau 0.995 conf+impact: F0.5 0.721 LSTM share 89.2% [85s]
+2026-11-08 04:05:21 seed 42 tau 0.995 conf: F0.5 0.721 LSTM share 89.2% [89s]
+2026-11-08 04:07:27 seed 42 tau 0.998 full: F0.5 0.618 LSTM share 40.4% [127s]
+2026-11-08 04:09:35 seed 42 tau 0.998 conf+impact: F0.5 0.618 LSTM share 37.0% [127s]
+2026-11-08 04:11:40 seed 42 tau 0.998 conf: F0.5 0.618 LSTM share 37.0% [125s]
+2026-11-08 04:12:39 seed 42 tau 0.999 full: F0.5 0.464 LSTM share 10.4% [59s]
+2026-11-08 04:13:49 seed 42 tau 0.999 conf+impact: F0.5 0.445 LSTM share 10.2% [69s]
+2026-11-08 04:15:01 seed 42 tau 0.999 conf: F0.5 0.445 LSTM share 10.2% [72s]
+2026-11-08 04:16:02 seed 42 tau 0.9995 full: F0.5 0.376 LSTM share 1.3% [62s]
+2026-11-08 04:17:04 seed 42 tau 0.9995 conf+impact: F0.5 0.376 LSTM share 1.2% [62s]
+2026-11-08 04:17:59 seed 42 tau 0.9995 conf: F0.5 0.393 LSTM share 1.2% [55s]

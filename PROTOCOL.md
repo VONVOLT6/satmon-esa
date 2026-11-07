@@ -49,3 +49,14 @@ Data: ESA-ADB Mission 1, channels 41-46. The development period exists only for 
 ## Addenda
 
 None yet.
+
+### Addendum 1 (2026-11-08): C1 burst design, before any C1 test run
+
+The first C1 design opened a burst of LSTM forecasts only from the trigger onwards (plus 2,400 warm-up samples). On the development period this lost alarms whenever the cheap tier fired partway into an event. Seed 42 lost F0.5 even at 92% LSTM share (0.721 vs 0.792). Those partial results are kept in `results/c1_dev_v1_no_lookback.*`.
+
+A look-back/post grid on seed 42's development data (`src/diag_c1_grid.py`) showed that 2,100 samples of look-back and 2,100 after the trigger recover the full-LSTM development score (0.792 at τ = 0.999, 12.3% LSTM share). Longer bursts gave no further gain. The final C1 design therefore uses LOOKBACK = 2100 and POST = 2100.
+
+H2 selection, unchanged in spirit:
+- **Choosing τ:** the full router is run on all 5 seeds over τ ∈ {0.995, 0.998, 0.999, 0.9995, 0.9999}. The chosen τ is the one with the smallest mean LSTM share whose mean development F0.5 is ≥ 0.776 − 0.01.
+- **Test:** the chosen τ is applied once to the test set.
+- **Claim:** non-inferiority (lower 95% bound of F0.5 − B0 above −0.02), together with the measured LSTM share.

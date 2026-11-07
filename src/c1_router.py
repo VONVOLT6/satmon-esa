@@ -7,7 +7,9 @@ Tier 1 (always on, cheap):
 Each score is turned into a rank against the nominal training data (0 to 1).
 
 Tier 3 (on demand): Telemanom-ESA-Pruned. A trigger opens a burst of LSTM forecasts covering
-PRE samples before the trigger and POST after it, because errors.py judges each point against the
+LOOKBACK + PRE samples before the trigger (LOOKBACK added after the first development run, see
+PROTOCOL.md addendum) and
+POST after it, because errors.py judges each point against the
 previous 2,100 smoothed errors. Alarms count only after the first PRE samples of a burst, once
 that history is complete. Every sample inside a burst counts as LSTM compute, padding included.
 
@@ -23,7 +25,8 @@ LAGS = np.array([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233])
 ROLL = 120
 SPAN = 30
 PRE = 2400   # 2,100-sample threshold window plus warm-up of the error smoothing
-POST = 700   # ten threshold steps of 70 samples
+POST = 2100      # samples after the trigger
+LOOKBACK = 2100  # samples before the trigger that can still raise alarms
 IMPACT_Z = 3.0
 
 
@@ -99,17 +102,21 @@ def triggers(scores, tau, use=("confidence", "novelty", "impact"), impact_channe
     return hit
 
 
-def bursts(trigger, n_pred):
-    """LSTM mask and alarm-valid mask, both in y_hat index space (sample index minus WINDOW)."""
+def bursts(trigger, n_pred, lookback=LOOKBACK, post=POST, warm=PRE):
+    """LSTM mask and alarm-valid mask, both in y_hat index space (sample index minus WINDOW).
+
+    A trigger at j runs the LSTM on [j - lookback - warm, j + post). The first `warm` samples only
+    rebuild the error history errors.py needs; alarms count from j - lookback onwards.
+    """
     j = np.flatnonzero(trigger[WINDOW:WINDOW + n_pred])
     run = np.zeros(n_pred + 1, np.int32)
-    np.add.at(run, np.clip(j - PRE, 0, n_pred), 1)
-    np.add.at(run, np.clip(j + POST, 0, n_pred), -1)
+    np.add.at(run, np.clip(j - lookback - warm, 0, n_pred), 1)
+    np.add.at(run, np.clip(j + post, 0, n_pred), -1)
     mask = np.cumsum(run[:-1]) > 0
     valid = mask.copy()
     edges = np.flatnonzero(np.diff(np.r_[False, mask].astype(np.int8)) == 1)
     for s in edges:
-        valid[s:s + PRE] = False
+        valid[s:s + warm] = False
     return mask, valid
 
 
