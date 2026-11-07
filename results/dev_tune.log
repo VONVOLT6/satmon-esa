@@ -18,3 +18,35 @@
 2026-11-03 22:34:35 dev seed 2 floor 0.0: F0.5 0.088 precision 0.072 recall 0.939 [117s]
 2026-11-03 22:36:24 dev seed 2 floor 0.003: F0.5 0.493 precision 0.459 recall 0.697 [109s]
 2026-11-03 22:38:14 dev seed 2 floor 0.005: F0.5 0.809 precision 0.944 recall 0.515 [110s]
+2026-11-08 03:05:37 start: dev period 2001-10-01T00:00:30.000000000 to 2007-01-01T00:00:00.000000000, 5523840 samples, 33 events; seeds [42, 1, 2, 3, 4]
+2026-11-08 03:07:01 dev seed 2 floor 0.007: F0.5 0.773 precision 0.937 recall 0.455 [79s]
+2026-11-08 03:08:25 dev seed 2 floor 0.01: F0.5 0.752 precision 0.933 recall 0.424 [84s]
+2026-11-08 03:09:46 dev seed 2 floor 0.015: F0.5 0.752 precision 0.933 recall 0.424 [80s]
+2026-11-08 03:11:16 dev seed 2 floor 0.02: F0.5 0.538 precision 0.875 recall 0.212 [90s]
+2026-11-08 03:12:32 dev seed 2 floor 0.03: F0.5 0.492 precision 0.857 recall 0.182 [76s]
+2026-11-08 03:18:28 dev seed 3 floor 0.0: F0.5 0.113 precision 0.092 recall 0.909 [104s]
+2026-11-08 03:19:55 dev seed 3 floor 0.003: F0.5 0.560 precision 0.534 recall 0.697 [87s]
+2026-11-08 03:21:15 dev seed 3 floor 0.005: F0.5 0.809 precision 0.944 recall 0.515 [80s]
+2026-11-08 03:22:36 dev seed 3 floor 0.007: F0.5 0.752 precision 0.933 recall 0.424 [81s]
+2026-11-08 03:24:00 dev seed 3 floor 0.01: F0.5 0.752 precision 0.933 recall 0.424 [83s]
+2026-11-08 03:25:16 dev seed 3 floor 0.015: F0.5 0.752 precision 0.933 recall 0.424 [77s]
+2026-11-08 03:26:40 dev seed 3 floor 0.02: F0.5 0.538 precision 0.875 recall 0.212 [84s]
+2026-11-08 03:28:02 dev seed 3 floor 0.03: F0.5 0.492 precision 0.857 recall 0.182 [82s]
+2026-11-08 03:33:50 dev seed 4 floor 0.0: F0.5 0.088 precision 0.072 recall 0.909 [105s]
+2026-11-08 03:35:15 dev seed 4 floor 0.003: F0.5 0.477 precision 0.442 recall 0.697 [86s]
+2026-11-08 03:36:39 dev seed 4 floor 0.005: F0.5 0.825 precision 0.947 recall 0.545 [83s]
+2026-11-08 03:38:02 dev seed 4 floor 0.007: F0.5 0.792 precision 0.941 recall 0.485 [83s]
+2026-11-08 03:39:24 dev seed 4 floor 0.01: F0.5 0.752 precision 0.933 recall 0.424 [83s]
+2026-11-08 03:40:49 dev seed 4 floor 0.015: F0.5 0.752 precision 0.933 recall 0.424 [85s]
+2026-11-08 03:42:12 dev seed 4 floor 0.02: F0.5 0.538 precision 0.875 recall 0.212 [83s]
+2026-11-08 03:43:37 dev seed 4 floor 0.03: F0.5 0.492 precision 0.857 recall 0.182 [85s]
+2026-11-08 03:43:37 mean dev F0.5 by floor: {0.0: 0.09611943438261347, 0.003: 0.485227136372381, 0.005: 0.8156557209721177, 0.007: 0.7763459151667778, 0.01: 0.7524033932121195, 0.015: 0.7524132613543543, 0.02: 0.5383821170443205, 0.03: 0.49175951059528583}; chosen floor 0.005
+2026-11-08 03:43:37 dev-only: stopping before the test set
+2026-11-08 03:45:24 start: dev period 2001-10-01T00:00:30.000000000 to 2007-01-01T00:00:00.000000000, 5523840 samples, 33 events; seeds [42, 1, 2, 3, 4]
+2026-11-08 03:45:31 mean dev F0.5 by floor: {0.0: 0.09611943438261347, 0.003: 0.485227136372381, 0.005: 0.8156557209721177, 0.007: 0.7763459151667778, 0.01: 0.7524033932121195, 0.015: 0.7524132613543543, 0.02: 0.5383821170443205, 0.03: 0.49175951059528583}; chosen floor 0.005
+2026-11-08 03:47:28 test seed 42 floor 0.005: F0.5 0.829 precision 0.999 recall 0.492
+2026-11-08 03:49:22 test seed 1 floor 0.005: F0.5 0.803 precision 0.968 recall 0.477
+2026-11-08 03:51:20 test seed 2 floor 0.005: F0.5 0.829 precision 0.999 recall 0.492
+2026-11-08 03:53:16 test seed 3 floor 0.005: F0.5 0.803 precision 0.968 recall 0.477
+2026-11-08 03:55:30 test seed 4 floor 0.005: F0.5 0.829 precision 0.999 recall 0.492
+2026-11-08 03:55:30 finished

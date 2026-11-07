@@ -186,3 +186,26 @@ Each step resumes after an interruption. `run_seeds.py 21_months 42 1 2 3 4` run
 We trained Telemanom-ESA on ESA-ADB Mission 1 and evaluated it with the official benchmark code. **The Pruned variant reaches a corrected event-wise F0.5 of 0.801 at 21 months (paper: 0.776) and 0.784 at 84 months (paper: 0.786), averaged over five training seeds.**
 
 This gives a verified, reproducible baseline for the project's contributions. It also shows where the room for improvement lies: the decision layer that turns forecast errors into alarms, and recall on rare events.
+
+## 12. Update (2026-11-08): calibrated error floor (H1)
+
+The Pruned variant's error floor of 0.007 was hand-picked by the paper's authors. Under the frozen protocol in `PROTOCOL.md`, we chose a floor from 8 candidates on a labelled development period (2001-10 to 2006-12, 33 events, unseen by the 21-month models). We then applied it **once** to the test set.
+
+| Floor (development, mean of 5 seeds) | 0 | 0.003 | **0.005** | 0.007 | 0.01 | 0.015 | 0.02 | 0.03 |
+|---|---|---|---|---|---|---|---|---|
+| Event-wise F0.5 | 0.096 | 0.485 | **0.816** | 0.776 | 0.752 | 0.752 | 0.538 | 0.492 |
+
+0.005 was best on all 5 seeds in development.
+
+**Test result (21 months, 5 seeds):**
+
+| | Paper's floor 0.007 | Calibrated 0.005 | Difference (95% CI, paired monthly bootstrap) |
+|---|---|---|---|
+| F0.5, all events | 0.801 | **0.818** | +0.017 [−0.009, +0.055] |
+| F0.5, anomalies only | 0.968 | 0.957 | −0.012 [−0.032, −0.000] |
+| Events found (of 65) | 29 | 31-32 | +2 to +3, all rare events |
+| False alarms | 0 | 0 (3 seeds), 1 (2 seeds) | |
+
+**Verdict: no clear difference.** The calibrated floor scores higher on every seed and finds 2-3 more rare events. However, the 95% interval includes zero, so by the protocol this is not a confirmed improvement. Anomaly detection is unchanged at 25 of 29. The small anomalies-only drop comes from one extra false alarm in two of the five seeds.
+
+This is the main lesson for the next contributions. With only 65 test events, a gain of about 0.02 F0.5 is within run-to-run noise, so a confirmed improvement needs either a larger effect or more events (the full channel set). Full numbers: `results/h1_result.json`. Test-set log: `results/test_log.md`.
