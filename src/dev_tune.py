@@ -5,7 +5,8 @@ The 21-month models were trained on 2000-01 to 2001-09. The rest of the training
 so they serve as a development set. Each candidate floor is scored there with the official metric.
 The floor with the best mean development F0.5 across seeds is then applied once to the test set.
 
-Usage: python src/dev_tune.py 42 1 2 3 4
+Usage: python src/dev_tune.py 42 1 2 3 4 [--dev-only]
+--dev-only stops after choosing the floor, so the test set is not touched until the protocol is frozen.
 Progress: results/dev_tune.log   Results: results/dev_tune_21_months.json
 """
 import json
@@ -50,7 +51,8 @@ def dev_predictions(seed, index, values):
 
 
 def main():
-    seeds = [int(s) for s in sys.argv[1:]]
+    dev_only = "--dev-only" in sys.argv
+    seeds = [int(s) for s in sys.argv[1:] if not s.startswith("--")]
     state = json.loads(OUT.read_text()) if OUT.exists() else {"floors": FLOORS, "dev": {}, "test": {}}
 
     with np.load(ROOT / "data" / "processed" / "84_months.train.npz") as d:
@@ -79,6 +81,10 @@ def main():
     state["mean_dev_F0.5"] = {str(f): v for f, v in mean_dev.items()}
     state["chosen_floor"] = chosen
     log(f"mean dev F0.5 by floor: {mean_dev}; chosen floor {chosen}")
+    OUT.write_text(json.dumps(state, indent=1))
+    if dev_only:
+        log("dev-only: stopping before the test set")
+        return
 
     with np.load(ROOT / "data" / "processed" / "test.npz") as d:
         index, values = d["index"], d["values"]
@@ -88,6 +94,7 @@ def main():
             continue
         run = ROOT / "models" / f"telemanom_{DATASET}_seed{seed}"
         flags = flags_from(np.load(run / "y_hat_last.npy"), values, chosen)
+        np.save(run / f"flags_last_floor{chosen}.npy", flags)
         state["test"][str(seed)] = {c: {k: float(v) for k, v in global_scores(index, flags, truth, c).items()}
                                     for c in ["all", "anomaly"]}
         OUT.write_text(json.dumps(state, indent=1))
