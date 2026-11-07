@@ -1,0 +1,7 @@
+== dev_tune.py
+== dev_tune.py exit 0
+== test_h1.py
+all: B0 0.8007  H1 0.8182  diff +0.0175  95% CI [-0.0088, +0.0549]
+anomaly: B0 0.9684  H1 0.9567  diff -0.0117  95% CI [-0.0320, -0.0000]
+verdict: no clear difference
+== test_h1.py exit 0
