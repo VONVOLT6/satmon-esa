@@ -1,0 +1,26 @@
+== test_h2.py
+seed 42: C1 F0.5 0.8007, LSTM share 6.4%
+seed 1: C1 F0.5 0.8007, LSTM share 6.4%
+seed 2: C1 F0.5 0.8007, LSTM share 6.4%
+seed 3: C1 F0.5 0.8007, LSTM share 6.4%
+seed 4: C1 F0.5 0.8007, LSTM share 6.4%
+all: B0 0.8007  C1 0.8007  diff +0.0000  95% CI [+0.0000, +0.0000]
+anomaly: B0 0.9684  C1 0.9684  diff +0.0000  95% CI [+0.0000, +0.0000]
+== interrupted by PC shutdown during the GPU timing step (after scoring and bootstrap above); re-running the same deterministic script to finish
+== test_h2.py
+seed 42: C1 F0.5 0.8007, LSTM share 6.4%
+seed 1: C1 F0.5 0.8007, LSTM share 6.4%
+seed 2: C1 F0.5 0.8007, LSTM share 6.4%
+seed 3: C1 F0.5 0.8007, LSTM share 6.4%
+seed 4: C1 F0.5 0.8007, LSTM share 6.4%
+all: B0 0.8007  C1 0.8007  diff +0.0000  95% CI [+0.0000, +0.0000]
+anomaly: B0 0.9684  C1 0.9684  diff +0.0000  95% CI [+0.0000, +0.0000]
+{
+ "full_lstm_seconds": 843.6189634000002,
+ "routed_lstm_seconds": 29.329283499999292,
+ "bursts": 52,
+ "cheap_tier_seconds": 12.1267785,
+ "speedup_total": 20.349712990105395
+}
+verdict: non-inferior
+== test_h2.py exit 0
