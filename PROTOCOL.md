@@ -76,3 +76,19 @@ ESA-AD has no sensor-fault labels, so C2 is evaluated on **injected** faults. Al
 - **H3b (no harm):** on the clean test set, C2 applied to B0's alarms has a lower 95% bound above −0.02 F0.5 relative to B0.
 - **Descriptive results:** the share of injected faults that raise any alarm, and per fault type, the share of those alarms correctly attributed to the sensor.
 - **Holm correction:** applies across H3a and H3b.
+
+### Addendum 3 (2026-11-09): C3 incident correlation (hypothesis H4), before any C3 data was prepared
+
+- **Data:** all 76 Mission 1 channels, on a 30-second zero-order-hold grid. The periods match those above: training 2000-01 to 2001-09 for the graph and the detector calibration, development 2001-10 to 2006-12 for tuning, and test 2007-2013.
+- **Alerts:** a cheap per-channel detector (robust z-score of a univariate autoregressive residual, smoothed) produces channel alerts. Its threshold is set on training data only, at a fixed false-alert rate. The full-set LSTM is not used, because the paper reports 8.5 hours of training for it.
+- **Dependency graph:** learned from training data only. Channels are linked when the correlation of their smoothed residual activity reaches ρ. The subsystem and group lists from `channels.csv` are reported as a comparison prior.
+- **Grouping methods compared:**
+  - *G0:* every channel alert is its own incident.
+  - *G1:* alerts within ±W samples of each other are merged regardless of channel, by time only.
+  - *G2 (proposed):* alerts within ±W are merged only if their channels are connected in the learned graph.
+  - *Tuning:* W and ρ are chosen on the development period to maximise pairwise grouping F1.
+- **Ground truth:** a pair of alerts that both overlap labelled events belongs together if both overlap the same event ID.
+- **Metrics:** pairwise grouping F1, incidents per detected event (operator load), the share of incidents mixing two or more event IDs, and onset-order agreement within multi-channel events.
+- **H4:** on the test set, G2's pairwise F1 is higher than G1's. The 95% interval comes from a paired bootstrap over labelled events.
+
+Limits fixed in advance: channel meanings are anonymised, so the graph shows learned statistical dependence, not physical causation.
