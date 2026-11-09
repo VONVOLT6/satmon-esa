@@ -288,3 +288,32 @@ Bias, noise, drift and dropout faults are almost always caught and attributed. S
 - *Favourable group:* C2 relies on correlated peer channels, which this 6-channel group provides. Groups without close peers would be harder.
 
 Full numbers: `results/h3_result.json`, `results/c2_dev.json`.
+
+## 15. Update (2026-11-09): cost-aware response replay (C4, hypothesis H5)
+
+**Idea.** Detecting an alarm is only half the job: someone has to decide what to do with it. Each alarm on the fault-injected test period gets one of three actions. A *page* calls an operator now, a *ticket* opens a maintenance task and a slower response, and *ignore* drops it. Each policy's cost is replayed on the recorded timeline.
+
+This is a counterfactual replay of the **alert policy only**, not of the spacecraft's behaviour. ESA-AD has no cost or response records, so results hold for the declared cost grid in `PROTOCOL.md` addendum 4. The grid has 36 points; the most important parameters are the cost of ignoring an anomaly M, of delaying it D, and of a false page F.
+
+**Policies:**
+- **P0:** page every alarm.
+- **P1:** use C2's sensor-fault label: ticket sensor faults, page everything else.
+- **P2 (proposed):** a learned model estimates whether each alarm is an anomaly, rare event, sensor fault or false alarm. It then picks the cheapest action in expectation.
+- **Oracle:** knows the truth.
+
+Test alarms, 5 seeds pooled: 170 anomaly, 20 rare event, 287 sensor fault and 17 false.
+
+| Policy | Cost at the central point (M = 50, D = 5, F = 1, S = 1) | Ranked first across the 36 grid points |
+|---|---|---|
+| P0 page everything | 64.8 | 0 |
+| **P1 C2 sensor rule** | **17.2** | **24** |
+| P2 learned cost-aware | 34.9 | 12 |
+| Oracle | 0.0 | n/a |
+
+**Verdict: H5 not supported.** P2 beats both P0 and P1 at only 12 of 36 grid points; the protocol required 80%. At the central point P2 costs +17.7 more than P1, with 95% CI [-9.7, +56.6].
+
+P2 wins mainly when delaying a real anomaly is cheap (D = 2: 8 of 12 points) and false pages are expensive (F = 3). It never wins when delay is expensive (D = 10: 0 of 12). It misjudges some real anomalies as ticket-worthy, which is costly whenever delay matters.
+
+**What did work:** the simple C2-driven rule P1 cuts response cost against paging everything at **every** grid point, from 64.8 to 17.2 at the central point. For the response-planning question, a reliable sensor-fault label matters more than a learned cost model. This negative result is useful in its own right: a more complex policy is not automatically better.
+
+Full numbers: `results/h5_result.json`.

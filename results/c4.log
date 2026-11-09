@@ -1,1 +1,5 @@
 2026-11-09 22:37:40 dev alarms by class (5 seeds pooled): {'anomaly': 69, 'rare': 42, 'sensor': 236, 'false': 49}; classes in model ['anomaly', 'rare', 'sensor', 'false']
+2026-11-09 22:37:57 test alarm classes (5 seeds pooled): {'anomaly': 170, 'rare': 20, 'sensor': 287, 'false': 17}
+2026-11-09 22:37:57 central grid point cost per test period: {'P0': 64.8, 'P1': 17.2, 'P2': 34.9, 'oracle': 0.0}
+2026-11-09 22:37:57 P2 beats P0 and P1 at 12/36 grid points; ranked first: {'P0': 0, 'P1': 24, 'P2': 12}
+2026-11-09 22:37:57 central bootstrap P2 - P1: +17.7, 95% CI [-9.7, +56.6]; H5 not supported
