@@ -1,0 +1,7 @@
+2026-11-09 22:13:50 dev seed 42: 77 alarms, 46 on injected faults, 23 on real events
+2026-11-09 22:15:22 dev seed 1: 80 alarms, 48 on injected faults, 23 on real events
+2026-11-09 22:16:51 dev seed 2: 81 alarms, 48 on injected faults, 23 on real events
+2026-11-09 22:18:16 dev seed 3: 78 alarms, 47 on injected faults, 22 on real events
+2026-11-09 22:19:45 dev seed 4: 80 alarms, 47 on injected faults, 23 on real events
+2026-11-09 22:19:45 dev: threshold 0.498, sensor F1 0.949, real alarms suppressed 3 of 114
+2026-11-09 22:19:45 coefficients {'n_channels': -2.168, 'top_share': -0.421, 'peer_dominance': 2.604, 'peer_max': -1.238, 'stuck': -0.729, 'noise': 0.381, 'out_of_range': 1.335}

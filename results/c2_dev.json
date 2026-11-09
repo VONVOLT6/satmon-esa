@@ -1,0 +1,370 @@
+{
+ "threshold": 0.4979922786984783,
+ "dev_sensor_F1": 0.9494505494505494,
+ "dev_events": {
+  "sensor": 236,
+  "real": 114
+ },
+ "real_suppressed": 3,
+ "faults": [
+  {
+   "type": "stuck",
+   "channel": 4,
+   "start": 5208276,
+   "end": 5209335,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 4,
+   "start": 747185,
+   "end": 748374,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 3,
+   "start": 3264916,
+   "end": 3266208,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 5,
+   "start": 2019933,
+   "end": 2020950,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 0,
+   "start": 4797876,
+   "end": 4800164,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 5,
+   "start": 409996,
+   "end": 411197,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 4,
+   "start": 1241635,
+   "end": 1243627,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 4,
+   "start": 1772962,
+   "end": 1775329,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 3,
+   "start": 2602130,
+   "end": 2602636,
+   "k": 0.0
+  },
+  {
+   "type": "stuck",
+   "channel": 3,
+   "start": 3896664,
+   "end": 3899267,
+   "k": 0.0
+  },
+  {
+   "type": "drift",
+   "channel": 2,
+   "start": 2155708,
+   "end": 2158533,
+   "k": 6.607892077841621
+  },
+  {
+   "type": "drift",
+   "channel": 3,
+   "start": 1917474,
+   "end": 1919018,
+   "k": 5.483742810841244
+  },
+  {
+   "type": "drift",
+   "channel": 0,
+   "start": 307772,
+   "end": 308934,
+   "k": 7.363852152831415
+  },
+  {
+   "type": "drift",
+   "channel": 2,
+   "start": 4515363,
+   "end": 4517963,
+   "k": 5.882350364392336
+  },
+  {
+   "type": "drift",
+   "channel": 2,
+   "start": 5353147,
+   "end": 5354494,
+   "k": 4.980269845014223
+  },
+  {
+   "type": "drift",
+   "channel": 3,
+   "start": 3133319,
+   "end": 3135825,
+   "k": 7.142470258374676
+  },
+  {
+   "type": "drift",
+   "channel": 5,
+   "start": 2040873,
+   "end": 2041685,
+   "k": 6.071307309139396
+  },
+  {
+   "type": "drift",
+   "channel": 0,
+   "start": 4977502,
+   "end": 4979748,
+   "k": 5.592551694053652
+  },
+  {
+   "type": "drift",
+   "channel": 1,
+   "start": 2552217,
+   "end": 2553056,
+   "k": 5.96813983121298
+  },
+  {
+   "type": "drift",
+   "channel": 1,
+   "start": 1266456,
+   "end": 1268399,
+   "k": 4.365107280658926
+  },
+  {
+   "type": "bias",
+   "channel": 0,
+   "start": 1193856,
+   "end": 1194923,
+   "k": 4.716732899683416
+  },
+  {
+   "type": "bias",
+   "channel": 1,
+   "start": 3326546,
+   "end": 3329381,
+   "k": 5.8327993925034205
+  },
+  {
+   "type": "bias",
+   "channel": 0,
+   "start": 4275763,
+   "end": 4277068,
+   "k": 6.578426474726724
+  },
+  {
+   "type": "bias",
+   "channel": 3,
+   "start": 5410828,
+   "end": 5412188,
+   "k": 7.630599285405477
+  },
+  {
+   "type": "bias",
+   "channel": 0,
+   "start": 862630,
+   "end": 863530,
+   "k": 4.101111684997715
+  },
+  {
+   "type": "bias",
+   "channel": 1,
+   "start": 342323,
+   "end": 343429,
+   "k": 7.605291833063822
+  },
+  {
+   "type": "bias",
+   "channel": 0,
+   "start": 4322366,
+   "end": 4323060,
+   "k": 6.597827368345554
+  },
+  {
+   "type": "bias",
+   "channel": 5,
+   "start": 1623854,
+   "end": 1624699,
+   "k": 5.927474139316647
+  },
+  {
+   "type": "bias",
+   "channel": 5,
+   "start": 5249586,
+   "end": 5251190,
+   "k": 6.987693894914213
+  },
+  {
+   "type": "bias",
+   "channel": 0,
+   "start": 1981211,
+   "end": 1983830,
+   "k": 7.409489283543901
+  },
+  {
+   "type": "noise",
+   "channel": 4,
+   "start": 5473351,
+   "end": 5476090,
+   "k": 3.7407702586248384
+  },
+  {
+   "type": "noise",
+   "channel": 0,
+   "start": 2518526,
+   "end": 2519365,
+   "k": 2.8039765563016816
+  },
+  {
+   "type": "noise",
+   "channel": 0,
+   "start": 1788480,
+   "end": 1790212,
+   "k": 3.852840845016373
+  },
+  {
+   "type": "noise",
+   "channel": 4,
+   "start": 1213130,
+   "end": 1215743,
+   "k": 3.0140326553548666
+  },
+  {
+   "type": "noise",
+   "channel": 0,
+   "start": 5485438,
+   "end": 5487673,
+   "k": 2.090240504692474
+  },
+  {
+   "type": "noise",
+   "channel": 5,
+   "start": 5172339,
+   "end": 5175132,
+   "k": 2.2811510228482854
+  },
+  {
+   "type": "noise",
+   "channel": 0,
+   "start": 1858564,
+   "end": 1861024,
+   "k": 3.3250351669453444
+  },
+  {
+   "type": "noise",
+   "channel": 1,
+   "start": 3844799,
+   "end": 3845114,
+   "k": 3.4745723639137998
+  },
+  {
+   "type": "noise",
+   "channel": 3,
+   "start": 3240069,
+   "end": 3241322,
+   "k": 2.017274653684076
+  },
+  {
+   "type": "noise",
+   "channel": 0,
+   "start": 3860301,
+   "end": 3860811,
+   "k": 3.981008918324405
+  },
+  {
+   "type": "dropout",
+   "channel": 4,
+   "start": 4383451,
+   "end": 4384664,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 1,
+   "start": 292522,
+   "end": 294160,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 0,
+   "start": 2003027,
+   "end": 2004388,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 4,
+   "start": 3308096,
+   "end": 3310969,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 3,
+   "start": 1926512,
+   "end": 1927345,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 0,
+   "start": 2478064,
+   "end": 2479997,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 3,
+   "start": 4913458,
+   "end": 4915232,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 3,
+   "start": 1822532,
+   "end": 1824485,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 3,
+   "start": 5055670,
+   "end": 5057656,
+   "k": 0.0
+  },
+  {
+   "type": "dropout",
+   "channel": 3,
+   "start": 703772,
+   "end": 705444,
+   "k": 0.0
+  }
+ ],
+ "coefficients": {
+  "n_channels": -2.168,
+  "top_share": -0.421,
+  "peer_dominance": 2.604,
+  "peer_max": -1.238,
+  "stuck": -0.729,
+  "noise": 0.381,
+  "out_of_range": 1.335
+ }
+}
