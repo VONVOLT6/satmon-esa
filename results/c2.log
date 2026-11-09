@@ -5,3 +5,17 @@
 2026-11-09 22:19:45 dev seed 4: 80 alarms, 47 on injected faults, 23 on real events
 2026-11-09 22:19:45 dev: threshold 0.498, sensor F1 0.949, real alarms suppressed 3 of 114
 2026-11-09 22:19:45 coefficients {'n_channels': -2.168, 'top_share': -0.421, 'peer_dominance': 2.604, 'peer_max': -1.238, 'stuck': -0.729, 'noise': 0.381, 'out_of_range': 1.335}
+2026-11-09 22:22:41 test seed 42 injected: B0 F0.5 0.3398, C2 0.6438, 50 of 99 alarms labelled sensor
+2026-11-09 22:22:42 test seed 42 clean: B0 F0.5 0.8007, C2 0.8007, 0 of 38 alarms labelled sensor
+2026-11-09 22:24:43 test seed 1 injected: B0 F0.5 0.3335, C2 0.6217, 50 of 101 alarms labelled sensor
+2026-11-09 22:24:44 test seed 1 clean: B0 F0.5 0.8007, C2 0.8007, 0 of 38 alarms labelled sensor
+2026-11-09 22:26:42 test seed 2 injected: B0 F0.5 0.3430, C2 0.6216, 49 of 98 alarms labelled sensor
+2026-11-09 22:26:43 test seed 2 clean: B0 F0.5 0.8007, C2 0.7906, 1 of 38 alarms labelled sensor
+2026-11-09 22:28:46 test seed 3 injected: B0 F0.5 0.3398, C2 0.6217, 48 of 99 alarms labelled sensor
+2026-11-09 22:28:47 test seed 3 clean: B0 F0.5 0.8007, C2 0.8007, 0 of 38 alarms labelled sensor
+2026-11-09 22:31:08 test seed 4 injected: B0 F0.5 0.3464, C2 0.6326, 47 of 97 alarms labelled sensor
+2026-11-09 22:31:09 test seed 4 clean: B0 F0.5 0.8007, C2 0.8007, 0 of 38 alarms labelled sensor
+2026-11-09 22:31:09 injected: B0 0.3405  C2 0.6283  diff +0.2877  95% CI [+0.2225, +0.3557]
+2026-11-09 22:31:09 clean: B0 0.8007  C2 0.7987  diff -0.0020  95% CI [-0.0076, +0.0000]
+2026-11-09 22:31:09 attribution {'stuck': {'faults': 50, 'alarmed': 27, 'attributed': 20}, 'drift': {'faults': 50, 'alarmed': 48, 'attributed': 48}, 'bias': {'faults': 50, 'alarmed': 50, 'attributed': 50}, 'noise': {'faults': 50, 'alarmed': 50, 'attributed': 50}, 'dropout': {'faults': 50, 'alarmed': 50, 'attributed': 48}}
+2026-11-09 22:31:09 verdicts: H3a improvement, H3b no harm (non-inferior)
