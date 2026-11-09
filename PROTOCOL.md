@@ -58,3 +58,21 @@ H2 selection, unchanged in spirit:
 - **Choosing τ:** the full router is run on all 5 seeds over τ ∈ {0.995, 0.998, 0.999, 0.9995, 0.9999}. The chosen τ is the one with the smallest mean LSTM share whose mean development F0.5 is ≥ 0.776 − 0.01.
 - **Test:** the chosen τ is applied once to the test set.
 - **Claim:** non-inferiority (lower 95% bound of F0.5 − B0 above −0.02), together with the measured LSTM share.
+
+### Addendum 2 (2026-11-09): C2 sensor reliability (hypotheses H3a, H3b), before any C2 code was run
+
+ESA-AD has no sensor-fault labels, so C2 is evaluated on **injected** faults. All claims are limited to those.
+
+- **Fault injection.**
+  - *Count and types:* 50 single-channel faults per period, 10 of each type. The types are stuck (value frozen), drift (linear ramp to k·σ), bias (step of k·σ), noise (added Gaussian noise of k·σ) and dropout (value reads 0).
+  - *Size:* σ is the channel's training standard deviation. k is drawn from U(4, 8) for bias and drift, and from U(2, 4) for noise.
+  - *Placement:* each fault lasts 2 to 24 hours, never overlaps a labelled event, and stays at least 3,000 samples from another fault.
+  - *Random seeds:* fixed at 101 for the development period and 202 for the test period.
+- **Pipeline.** The baseline is the always-on LSTM (B0) run on the injected data, with its forecasts recomputed wherever a fault changes the input. C2 scores every alarm with a logistic model on peer-consistency features (does one channel disagree with the five others in its group?), plus stuck, noise and out-of-range features. Alarms scored above a threshold are relabelled "sensor fault" and removed from the system-alarm stream.
+- **Training and threshold, on the development period only.**
+  - *Training labels:* alarms overlapping an injected fault count as sensor faults, and alarms overlapping a labelled event count as system events. All other alarms are left out of training.
+  - *Threshold:* the one that maximises sensor-fault F1, provided at most 5% of real-event alarms are suppressed (pooled over the 5 seeds).
+- **H3a (improvement):** on the injected test set, system-alarm F0.5 (scored against the real labels only) improves on B0. The 95% paired bootstrap interval must lie above 0.
+- **H3b (no harm):** on the clean test set, C2 applied to B0's alarms has a lower 95% bound above −0.02 F0.5 relative to B0.
+- **Descriptive results:** the share of injected faults that raise any alarm, and per fault type, the share of those alarms correctly attributed to the sensor.
+- **Holm correction:** applies across H3a and H3b.
