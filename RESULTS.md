@@ -209,3 +209,43 @@ The Pruned variant's error floor of 0.007 was hand-picked by the paper's authors
 **Verdict: no clear difference.** The calibrated floor scores higher on every seed and finds 2-3 more rare events. However, the 95% interval includes zero, so by the protocol this is not a confirmed improvement. Anomaly detection is unchanged at 25 of 29. The small anomalies-only drop comes from one extra false alarm in two of the five seeds.
 
 This is the main lesson for the next contributions. With only 65 test events, a gain of about 0.02 F0.5 is within run-to-run noise, so a confirmed improvement needs either a larger effect or more events (the full channel set). Full numbers: `results/h1_result.json`. Test-set log: `results/test_log.md`.
+
+## 13. Update (2026-11-09): adaptive computation (C1, hypothesis H2)
+
+**Idea.** The original detector runs the LSTM on every 30-second reading. C1 adds a cheap screening tier that watches everything and calls the LSTM only when something looks wrong. The tier has three signals:
+- **Confidence:** a small linear forecaster's error.
+- **Novelty:** how unusual the recent pattern is compared with the training data.
+- **Impact:** how many channels deviate at once.
+
+When the screener fires, the LSTM runs on a burst around that point, because its alarm logic needs about 2,100 samples of error history. The burst covers 2,400 samples of warm-up and 2,100 of look-back before the trigger, and 2,100 after it. Every sample in a burst counts as LSTM work, padding included.
+
+**Development period (21-month models, 5 seeds; setting chosen by the frozen rule in `PROTOCOL.md`, addendum 1):**
+
+| Screening threshold τ | F0.5, full router | LSTM share | F0.5, confidence signal only |
+|---|---|---|---|
+| 0.995 | 0.776 | 99.1% | 0.776 |
+| 0.998 | 0.776 | 54.7% | 0.776 |
+| 0.999 | 0.776 | 12.3% | 0.776 |
+| 0.9995 | 0.752 | 2.3% | 0.752 |
+| 0.9999 | 0.752 | 2.1% | 0.730 |
+
+Full-LSTM development F0.5: 0.776. The rule picks the smallest LSTM share within 0.01 of that score: **τ = 0.999**. Novelty and impact add little at τ = 0.999. They matter at the most aggressive setting, τ = 0.9999, where they hold 0.752 against 0.730 for confidence alone.
+
+**Test result (run once, 5 seeds):**
+
+| | Always-on LSTM (B0) | C1 adaptive |
+|---|---|---|
+| F0.5, all events | 0.8007 | **0.8007** (difference +0.0000, 95% CI [+0.0000, +0.0000]) |
+| F0.5, anomalies only | 0.9684 | 0.9684 |
+| Share of test data the LSTM runs on | 100% | **6.4%** |
+| Measured LSTM inference time (seed 42, GPU) | 844 s | 29 s LSTM + 12 s screening (52 bursts) |
+| End-to-end inference speed-up | 1× | **20.3×** |
+
+**Verdict: non-inferior, with a 20-fold cut in inference time.** C1 catches exactly the same events with the same false alarms on every seed, while running the LSTM on 6.4% of the test data. This is the project's first confirmed contribution. The speed-up was measured in a single run on one laptop: both timings come from the same session, but the absolute seconds depend on machine load.
+
+Limits:
+- **Unchanged recall:** C1 saves compute but cannot find events the baseline misses.
+- **Lookback found on development data:** the 2,100-sample lookback was found after a first design failed on the development period. Both the failure and the fix are recorded in `PROTOCOL.md`.
+- **Interrupted run:** the test run was interrupted by a PC shutdown during the timing step and re-executed. The scores are deterministic and identical in both runs (`results/h2_run.log`).
+
+Full numbers: `results/h2_result.json`, `results/c1_dev.json`.
