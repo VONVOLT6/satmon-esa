@@ -7,7 +7,8 @@ they arrive, so an interrupted run resumes where it stopped.
 The zip's members use Deflate64, which Python's zipfile cannot read, so members
 are fetched as raw bytes and inflated with the inflate64 package.
 
-Usage: python src/fetch_subset.py [--list]
+Usage: python src/fetch_subset.py [--list] [--all]
+--all fetches every channel and every telecommand file (about 3.7 GB) instead of channels 41-46.
 """
 import argparse
 import io
@@ -86,10 +87,12 @@ class RemoteFile(io.RawIOBase):
         return data
 
 
-def wanted(name):
+def wanted(name, everything=False):
     base = name.rsplit("/", 1)[-1]
     if base in {"labels.csv", "anomaly_types.csv", "channels.csv", "telecommands.csv"}:
         return True
+    if everything:
+        return "/channels/" in f"/{name}" or "/telecommands/" in f"/{name}"
     return "/channels/" in f"/{name}" and base[:-4] in CHANNELS
 
 
@@ -150,11 +153,12 @@ def inflate(info, pieces, target):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--list", action="store_true")
+    parser.add_argument("--all", action="store_true")
     args = parser.parse_args()
 
     with zipfile.ZipFile(RemoteFile()) as z:
         infos = z.infolist()
-    picked = [i for i in infos if not i.is_dir() and wanted(i.filename)]
+    picked = [i for i in infos if not i.is_dir() and wanted(i.filename, args.all)]
     print(f"{len(infos)} entries in zip, picked {len(picked)}, "
           f"{sum(i.compress_size for i in picked) / 1e6:.1f} MB to fetch", flush=True)
     if args.list:
