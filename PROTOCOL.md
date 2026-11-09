@@ -92,3 +92,30 @@ ESA-AD has no sensor-fault labels, so C2 is evaluated on **injected** faults. Al
 - **H4:** on the test set, G2's pairwise F1 is higher than G1's. The 95% interval comes from a paired bootstrap over labelled events.
 
 Limits fixed in advance: channel meanings are anonymised, so the graph shows learned statistical dependence, not physical causation.
+
+### Addendum 4 (2026-11-09): C4 cost-aware response replay (hypothesis H5), before any C4 code was run
+
+C4 replays monitoring decisions on the recorded timeline. It is **not** an estimate of what the spacecraft would have done, and ESA-AD has no response or cost records. So every result is conditional on a declared cost grid, and the grid is reported in full.
+
+- **Alarms:** the always-on LSTM's alarm events on the fault-injected periods from C2 (development seed 101, test seed 202).
+- **True class of each alarm:**
+  - *anomaly:* overlaps a labelled Anomaly.
+  - *rare:* overlaps a labelled Rare Event and no Anomaly.
+  - *sensor:* overlaps an injected fault.
+  - *false:* none of the above.
+- **Actions and costs:**
+
+  | Action | anomaly | rare | sensor | false |
+  |---|---|---|---|---|
+  | page | 0 | F | F | F |
+  | ticket | D | T | 0 | T |
+  | ignore | M | 0 | S | 0 |
+
+  - *Cost grid:* M ∈ {20, 50, 100}, D ∈ {2, 5, 10}, F ∈ {1, 3}, S ∈ {1, 3}, T = 0.5 (36 grid points).
+- **Policies:**
+  - *P0:* page every alarm, as today.
+  - *P1:* C2 rule. Ticket if C2 says sensor fault, otherwise page.
+  - *P2 (proposed):* a multinomial logistic model estimates the class probabilities from C2's features plus alarm duration, trained on development alarms only. It then picks the action with the lowest expected cost at each grid point.
+  - *Oracle:* knows the true class.
+- **H5:** P2's regret (cost minus the oracle's) is below both P0's and P1's at ≥ 80% of the 36 grid points, averaged over the 5 seeds. A paired monthly-block bootstrap of the cost difference P2 − P1 is reported at the central grid point (M = 50, D = 5, F = 1, S = 1).
+- **Stability (G5):** how often each policy ranks first across the grid is reported. An unstable ranking is reported as conditions, not a winner.
