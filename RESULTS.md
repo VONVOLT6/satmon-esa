@@ -249,3 +249,42 @@ Limits:
 - **Interrupted run:** the test run was interrupted by a PC shutdown during the timing step and re-executed. The scores are deterministic and identical in both runs (`results/h2_run.log`).
 
 Full numbers: `results/h2_result.json`, `results/c1_dev.json`.
+
+## 14. Update (2026-11-09): sensor reliability (C2, hypotheses H3a and H3b)
+
+**Idea.** A broken sensor and a real spacecraft problem can both make the LSTM raise an alarm, but they need different responses: a maintenance ticket against an incident response. Channels 41-46 form one sensor group, and in the test period 62 of the 64 events with a channel count move all six channels together. C2 asks four questions of every alarm:
+- Does one channel disagree with what its five peers predict?
+- How many channels are involved?
+- Does the signal look stuck, noisy or out of range?
+
+A logistic model turns these features into P(sensor fault). Alarms above the threshold become "sensor fault" and leave the system-alarm stream.
+
+**Data.** ESA-AD has no sensor-fault labels, so 50 single-channel faults were injected into each period, 10 each of stuck, drift, bias, noise and dropout, as fixed in `PROTOCOL.md` addendum 2 before any C2 run. The model and threshold were fitted on the development period only. The resulting threshold is 0.498, with development sensor-fault F1 0.949, and 3 of 114 real-event alarms suppressed.
+
+**Test result (run once, 5 seeds, scored against the real labels only):**
+
+| Condition | Always-on LSTM (B0) | With C2 | Difference (95% CI) | Verdict |
+|---|---|---|---|---|
+| Test with injected sensor faults (H3a) | 0.341 | **0.628** | +0.288 [+0.223, +0.356] | improvement |
+| Clean test, no faults (H3b) | 0.8007 | 0.7987 | -0.0020 [-0.0076, +0.0000] | no harm (non-inferior) |
+
+Without C2, every injected fault the LSTM notices becomes a false system alarm, roughly halving F0.5. With C2 most of those alarms are correctly re-labelled, recovering about 0.29 F0.5. On clean data C2 almost never fires: it re-labelled 1 real-event alarm in one of the five seeds.
+
+**Attribution by fault type (test, 5 seeds × 10 faults each):**
+
+| Fault type | Injected | Raised an LSTM alarm | Correctly attributed to the sensor |
+|---|---|---|---|
+| stuck | 50 | 27 (54%) | 20 of 27 (74%) |
+| drift | 50 | 48 (96%) | 48 of 48 (100%) |
+| bias | 50 | 50 (100%) | 50 of 50 (100%) |
+| noise | 50 | 50 (100%) | 50 of 50 (100%) |
+| dropout | 50 | 50 (100%) | 48 of 50 (96%) |
+
+Bias, noise, drift and dropout faults are almost always caught and attributed. Stuck sensors are the weak spot: frozen values often look normal to the LSTM, so only about half raise an alarm at all.
+
+**Limits.**
+- *Injected faults only:* the injected faults come from the same simple generator used for development, so the result is likely optimistic for real sensor failures.
+- *Single-channel faults only:* faults hitting several sensors at once were not tested.
+- *Favourable group:* C2 relies on correlated peer channels, which this 6-channel group provides. Groups without close peers would be harder.
+
+Full numbers: `results/h3_result.json`, `results/c2_dev.json`.
