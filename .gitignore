@@ -26,3 +26,4 @@ results/fetch_all.log
 results/prepare_full*.log
 models/**/c5_*.npy
 models/**/r_*.npy
+paper/*.zip
