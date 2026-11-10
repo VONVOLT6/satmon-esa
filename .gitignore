@@ -1,6 +1,6 @@
 .venv/
 __pycache__/
-data/
+/data/
 baseline/
 # Large per-run caches: regenerate with src/evaluate.py
 models/**/y_hat_*.npy

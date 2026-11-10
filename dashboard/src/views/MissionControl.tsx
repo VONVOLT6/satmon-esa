@@ -3,15 +3,15 @@ import Globe from "../components/Globe";
 import { Chip } from "../components/ui";
 import { dataset, fmt, label, ours, paper, SEEDS, totalTestEvents } from "../data/model";
 
-const PHASES = [
+const PHASES: { id: string; name: string; status: "done" | "next" | "planned" }[] = [
   { id: "P0", name: "Setup and metric check", status: "done" },
   { id: "P1", name: "Reproduce the paper's baseline", status: "done" },
-  { id: "P2", name: "Freeze the evaluation protocol", status: "next" },
-  { id: "P3", name: "C1: adaptive computation", status: "planned" },
-  { id: "P4", name: "C2 + C3: reliability and graphs", status: "planned" },
-  { id: "P5", name: "C4: cost-aware response", status: "planned" },
-  { id: "P6", name: "C5: ablation and final test", status: "planned" },
-] as const;
+  { id: "P2", name: "Freeze the evaluation protocol", status: "done" },
+  { id: "P3", name: "C1: adaptive computation", status: "done" },
+  { id: "P4", name: "C2 + C3: reliability and graphs", status: "done" },
+  { id: "P5", name: "C4: cost-aware response", status: "done" },
+  { id: "P6", name: "C5 ablation + rare events", status: "done" },
+];
 
 const PIPELINE = [
   { icon: Radio, title: "Telemetry in", text: `${dataset.channels.length} sensor channels, one reading every ${dataset.sampling_seconds} s` },
@@ -47,7 +47,7 @@ export default function MissionControl({ onOpenResearch }: { onOpenResearch: () 
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-slate-300">
             A satellite streams thousands of sensor readings to the ground. We trained a forecasting neural network on real European Space
             Agency (ESA) telemetry to flag readings that stop behaving normally, while keeping false alarms rare. We reproduced the published
-            benchmark result, and our planned trust-aware, resource-efficient additions build on that baseline.
+            benchmark result, then tested trust-aware, resource-efficient additions on top of it: running the network 20× less often at the same accuracy, and telling broken sensors apart from real problems.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">

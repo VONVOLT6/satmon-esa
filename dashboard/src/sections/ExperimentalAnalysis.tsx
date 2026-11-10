@@ -14,7 +14,7 @@ export function ScopeNote() {
       <div className="mb-1 flex items-center gap-2 font-semibold text-violet-200"><FlaskConical className="h-4 w-4" />A separate experiment</div>
       These results come from the team's feature-engineering study: Random Forest detectors on <b>{e.dataset}</b>, split {e.split.toLowerCase()},
       with {n0(e.test_observations)} test observations ({n0(e.test_anomalies)} anomalous). Metrics are <b>sample-level</b>: every observation
-      is scored separately. They measure a different task from the event-wise Mission 1 results in sections A-H and must not be compared with
+      is scored separately. They measure a different task from the event-wise Mission 1 results in sections A-N and must not be compared with
       them. Each value comes from a single run. Charts 1-4 read the result files at commit <span className="font-mono text-xs">{RF.source.commit}</span>.
       Values marked <Chip tone="violet">team-reported</Chip> were supplied from the team's screenshots and are not in those files.
     </div>
