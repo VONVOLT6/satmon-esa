@@ -119,3 +119,38 @@ C4 replays monitoring decisions on the recorded timeline. It is **not** an estim
   - *Oracle:* knows the true class.
 - **H5:** P2's regret (cost minus the oracle's) is below both P0's and P1's at ≥ 80% of the 36 grid points, averaged over the 5 seeds. A paired monthly-block bootstrap of the cost difference P2 − P1 is reported at the central grid point (M = 50, D = 5, F = 1, S = 1).
 - **Stability (G5):** how often each policy ranks first across the grid is reported. An unstable ranking is reported as conditions, not a winner.
+
+### Addendum 5 (2026-11-10): C5 ablation (configurations A0-A8, L1-L4), before any C5 code was run
+
+C5 measures what each contribution adds when they are combined in one pipeline. It is **descriptive**: no new confirmatory hypothesis, no Holm correction. Point estimates come with paired monthly-block bootstrap intervals. All components keep the settings already fixed on the development period. Nothing new is tuned, except one small model described under C4 below.
+
+- **Setting:** channels 41-46, 21-month models, 5 seeds. The main condition is the test period with C2's injected faults (seed 202), the only setting where C1, C2, C3 and C4 all act. The clean test period is reported for F0.5 only.
+- **Components:**
+  - *C1:* the router at τ = 0.999 (addendum 1). On the injected test the cheap tier is re-scored on the injected values, and the LSTM uses forecasts recomputed where faults change its input, as in C2. Variants: confidence only, confidence + impact, full.
+  - *C2:* the classifier and threshold from addendum 2. Alarms labelled "sensor fault" leave the system-alarm stream and become tickets.
+  - *C3:* alarm events within W = 2,880 samples are merged into one incident, using G2's W chosen on development (addendum 3). The learned graph links all six channels 41-46 (every pairwise correlation ≥ 0.68, far above ρ = 0.1), so on this group G2 reduces to time grouping. With C2 on, system alarms and sensor-fault alarms are grouped separately.
+  - *C4:* P2 from addendum 4 when C2 is present. Without C2, its features are unavailable, so a no-C2 variant of the same multinomial model is fitted on the development alarms using only log duration and number of channels alarmed. When C4 is off, the policy is P1 (C2 rule) if C2 is present, otherwise P0 (page every alarm).
+- **Configurations:**
+
+  | Config | Detector | C2 | C3 | C4 |
+  |---|---|---|---|---|
+  | A0 | always-on LSTM (B0) | | | |
+  | A1 | cheap tier alone, its triggers are the alarms | | | |
+  | A2 | C1 confidence only | | | |
+  | A3 | C1 confidence + impact | | | |
+  | A4 | C1 full | | | |
+  | A5 | C1 full | yes | | |
+  | A6 | C1 full | | yes | |
+  | A7 | C1 full | | | yes (no-C2 variant) |
+  | A8 | C1 full | yes | yes | yes |
+  | L1 | always-on LSTM (A8 minus C1) | yes | yes | yes |
+  | L2 | C1 full (A8 minus C2) | | yes | yes (no-C2 variant) |
+  | L3 | C1 full (A8 minus C3) | yes | | yes |
+  | L4 | C1 full (A8 minus C4) | yes | yes | P1 |
+
+- **Metrics, mean of 5 seeds:**
+  - *Detection:* system-alarm event-wise F0.5 against the real labels, on the injected test and on the clean test.
+  - *Compute:* LSTM share.
+  - *Operator load:* items raised (incidents with C3, alarm events without), and items that mix a real event with an injected fault.
+  - *Response cost:* cost at the central grid point and mean regret over the 36-point grid. Cost stays per alarm event, as in addendum 4; C3 does not change it.
+- **Intervals:** paired monthly-block bootstrap of the injected-test F0.5 difference for A8 − A0 and for A8 − L1 ... L4. Monthly bootstrap of the central-point cost difference for A8 − L4.
