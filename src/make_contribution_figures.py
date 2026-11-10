@@ -1,9 +1,11 @@
 """Charts for contributions C1-C5, built from saved result files only (no recomputation).
 
-Usage: python src/make_contribution_figures.py
-Writes results/figures/7_c1_adaptive_computation.png ... 11_c5_ablation.png
+Usage: python src/make_contribution_figures.py           (results/figures/, with titles)
+       python src/make_contribution_figures.py --paper   (paper/figures/, no titles: the paper's captions carry them)
+Writes 7_c1_adaptive_computation.png ... 12_rare_events.png
 """
 import json
+import sys
 
 import matplotlib
 
@@ -13,7 +15,8 @@ import numpy as np
 
 from thresholding import ROOT
 
-OUT = ROOT / "results" / "figures"
+PAPER = "--paper" in sys.argv
+OUT = ROOT / ("paper" if PAPER else "results") / "figures"
 RES = ROOT / "results"
 PROPOSED = "#2a78d6"   # categorical slot 1: proposed / ours
 SECOND = "#eb6834"     # categorical slot 2
@@ -23,6 +26,11 @@ INK, INK2 = "#0b0b0b", "#52514e"
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
                      "axes.edgecolor": INK2, "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
                      "axes.grid": False, "legend.frameon": False})
+
+
+def suptitle(fig, text, **kw):
+    if not PAPER:
+        fig.suptitle(text, **kw)
 
 
 def load(name):
@@ -73,7 +81,7 @@ def fig_c1():
     b.legend(loc="lower right", fontsize=9)
     b.set_title(f"Test: same F0.5 ({h2['bootstrap']['all']['B']:.3f}), LSTM on {h2['mean_lstm_share'] * 100:.1f}% of data",
                 loc="left", fontsize=11)
-    fig.suptitle("C1 adaptive computation: the LSTM runs only where a cheap screener sees something", x=0.01, ha="left",
+    suptitle(fig, "C1 adaptive computation: the LSTM runs only where a cheap screener sees something", x=0.01, ha="left",
                  fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "7_c1_adaptive_computation.png", dpi=160)
@@ -118,7 +126,7 @@ def fig_c2():
     b.set_xlim(0, 52)
     b.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=3, fontsize=8.5)
     b.set_title("What happened to each injected fault", loc="left", fontsize=11)
-    fig.suptitle("C2 sensor reliability: broken-sensor alarms leave the system-alarm stream", x=0.01, ha="left",
+    suptitle(fig, "C2 sensor reliability: broken-sensor alarms leave the system-alarm stream", x=0.01, ha="left",
                  fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "8_c2_sensor_reliability.png", dpi=160)
@@ -146,7 +154,7 @@ def fig_c3():
     b.set_xlim(0, 1.1)
     b.set_xlabel("Pairwise grouping F1 (higher is better)")
     b.set_title("Grouping correctness", loc="left", fontsize=11)
-    fig.suptitle("C3 incident correlation, all 76 channels, test period: time-only grouping wins", x=0.01, ha="left",
+    suptitle(fig, "C3 incident correlation, all 76 channels, test period: time-only grouping wins", x=0.01, ha="left",
                  fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "9_c3_incident_correlation.png", dpi=160)
@@ -182,7 +190,7 @@ def fig_c4():
     b.set_ylim(0, 13)
     b.legend(loc="upper left", fontsize=9)
     b.set_title("Which policy wins across the 36-point grid (P0 never does)", loc="left", fontsize=11)
-    fig.suptitle("C4 cost-aware response replay: the simple C2 rule beats the learned policy", x=0.01, ha="left",
+    suptitle(fig, "C4 cost-aware response replay: the simple C2 rule beats the learned policy", x=0.01, ha="left",
                  fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "10_c4_response_cost.png", dpi=160)
@@ -210,7 +218,7 @@ def fig_c5():
         ax.spines["bottom"].set_visible(False)
         ax.set_title(title, loc="left", fontsize=10)
     axes[0].set_yticks(y, [l for _, l in rows])
-    fig.suptitle("C5 ablation on the faulty test period (5 seeds): L4 is the best combination", x=0.01, ha="left",
+    suptitle(fig, "C5 ablation on the faulty test period (5 seeds): L4 is the best combination", x=0.01, ha="left",
                  fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "11_c5_ablation.png", dpi=160)
@@ -252,7 +260,7 @@ def fig_rare():
     b.set_xlim(-0.15, 0.85)
     b.set_xlabel("F0.5 change vs B0, with 95% CI (paired monthly bootstrap)")
     b.set_title("Score change", loc="left", fontsize=11)
-    fig.suptitle("Rare events: telecommand gates more than double rare-event detections, but H6 is not confirmed",
+    suptitle(fig, "Rare events: telecommand gates more than double rare-event detections, but H6 is not confirmed",
                  x=0.01, ha="left", fontsize=12, fontweight="bold")
     fig.tight_layout()
     fig.savefig(OUT / "12_rare_events.png", dpi=160)
@@ -260,6 +268,7 @@ def fig_rare():
 
 
 if __name__ == "__main__":
-    for f in [fig_c1, fig_c2, fig_c3, fig_c4, fig_c5, fig_rare]:
+    figs = [fig_c1, fig_c2, fig_c5, fig_rare] if PAPER else [fig_c1, fig_c2, fig_c3, fig_c4, fig_c5, fig_rare]
+    for f in figs:
         f()
         print("done", f.__name__)

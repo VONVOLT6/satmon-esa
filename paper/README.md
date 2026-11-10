@@ -6,7 +6,8 @@ IEEE conference format (`IEEEtran`). Every number comes from `RESULTS.md` and th
 |---|---|
 | `main.tex` | The paper |
 | `refs.bib` | References |
-| `figures/` | Copies of `results/figures/` 7, 8, 11 and 12 |
+| `figures/` | Figures 7, 8, 11 and 12 without titles (the captions carry them): `python src/make_contribution_figures.py --paper` |
+| `satmon-paper.pdf` | The compiled paper (Overleaf, pdfLaTeX, 6 pages, 0 errors, 0 warnings) |
 
 ## Build the PDF
 
