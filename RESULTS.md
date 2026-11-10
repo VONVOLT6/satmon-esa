@@ -317,3 +317,47 @@ P2 wins mainly when delaying a real anomaly is cheap (D = 2: 8 of 12 points) and
 **What did work:** the simple C2-driven rule P1 cuts response cost against paging everything at **every** grid point, from 64.8 to 17.2 at the central point. For the response-planning question, a reliable sensor-fault label matters more than a learned cost model. This negative result is useful in its own right: a more complex policy is not automatically better.
 
 Full numbers: `results/h5_result.json`.
+
+## 16. Update (2026-11-10): incident correlation across all 76 channels (C3, hypothesis H4)
+
+**Idea.** On the full Mission 1 channel set, one real incident sets off alerts on many channels at once, so an operator faces a flood of separate alerts. C3 groups alerts into incidents. The proposed method (G2) merges alerts only if they are close in time **and** their channels are linked in a dependency graph. The graph is learned from training data, as the correlation between channels' residual activity.
+
+**Setup** (fixed in `PROTOCOL.md` addendum 3):
+- *Data:* all 76 channels, prepared on one 30-second grid.
+- *Alerts:* a cheap per-channel forecaster raises alerts above its own 99.99th training percentile.
+- *Tuning:* W and ρ were tuned on the development period.
+- *Test:* run once against the ESA event IDs.
+
+The test period has 22,420 alerts, 1,996 of them on labelled events.
+
+| Grouping | Pairwise F1 | Precision | Recall | Incidents per event | Incidents mixing events | Total incidents |
+|---|---|---|---|---|---|---|
+| G0 no grouping | 0.000 | 0.000 | 0.000 | 30.24 | 0 | 22,420 |
+| G1 time only (W = 720) | 0.978 | 0.993 | 0.963 | 1.48 | 4 | 1,913 |
+| G2 learned graph (W = 2880, ρ = 0.1) | 0.406 | 1.000 | 0.254 | 7.41 | 1 | 3,516 |
+| G2 with subsystem prior (comparison) | 0.893 | 1.000 | 0.807 | 1.64 | 1 | 1,115 |
+
+**Verdict: H4 not supported; the learned graph is worse.** G2 minus G1 pairwise F1 is -0.572, with 95% CI [-0.576, -0.179]. The learned graph never merges two different events (precision 1.0), but it splits most real incidents: only 25% of same-event alert pairs end up together.
+
+Training data contains few incidents, so the residual-activity correlations are weak and the graph is too sparse. The development period showed the same pattern (best G2 F1 0.801 vs G1 0.897).
+
+**What did work:**
+- **Grouping by time alone (G1)** cuts operator load from **30.2 alerts per event to 1.48 incidents per event**, with pairwise F1 0.978. In ESA-ADB, separate incidents rarely overlap in time, which is why time-based grouping is already enough.
+- **The known subsystem structure** used as the graph keeps precision at 1.000 (only 1 mixed incident, against 4 for G1) with F1 0.893. That would matter on missions where incidents in different subsystems happen at the same time.
+
+Limits: channel names are anonymised, so any graph shows statistical association, not physical causation. The cheap per-channel detectors also raise many alerts on nominal data (20,424 of 22,420 in the test period). That affects operator load, but not the pairwise grouping score.
+
+Full numbers: `results/h4_result.json`, `results/c3_dev.json`.
+
+## 17. Summary of all contributions
+
+| Contribution | Hypothesis | Result | Status |
+|---|---|---|---|
+| Reproduction (Telemanom-ESA-Pruned) | G1 gate | 0.801 vs paper 0.776 (21 months), 0.784 vs 0.786 (84 months) | **Reproduced** |
+| Calibrated error floor | H1 | 0.818 vs 0.801, 95% CI includes 0 | Not confirmed |
+| **C1 adaptive computation** | H2 | Same F0.5 (0.8007), LSTM on 6.4% of data, **20.3× faster** | **Confirmed** |
+| **C2 sensor reliability** | H3a, H3b | **+0.288 F0.5** with injected sensor faults; no harm on clean data | **Confirmed** (injected faults only) |
+| C3 incident correlation | H4 | Learned graph worse than time-only grouping; time grouping cuts alerts 30.2 → 1.48 per event | Not supported |
+| C4 cost-aware response | H5 | Learned policy best at 12 of 36 cost points; the C2 sensor rule beats page-everything at all 36 | Not supported |
+
+Every test-set run is listed in `results/test_log.md`. Each was run once, after its design was committed in `PROTOCOL.md`.
