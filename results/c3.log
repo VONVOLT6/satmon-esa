@@ -28,3 +28,8 @@
     G2 2880 0.500      1.000   0.127 0.225                5.690                0             2948               42
     G2 2880 0.700      1.000   0.127 0.225                5.690                0             2948               42
 2026-11-10 16:03:11 chosen: G1 W=720 (dev F1 0.897); G2 W=2880 rho=0.1 (dev F1 0.801)
+2026-11-10 16:04:36 test G0: pairwise F1 0.000 (P 0.000, R 0.000), incidents per event 30.24, mixed incidents 0, incidents 22420
+2026-11-10 16:04:36 test G1: pairwise F1 0.978 (P 0.993, R 0.963), incidents per event 1.48, mixed incidents 4, incidents 1913
+2026-11-10 16:04:36 test G2: pairwise F1 0.406 (P 1.000, R 0.254), incidents per event 7.41, mixed incidents 1, incidents 3516
+2026-11-10 16:04:36 test G2_subsystem_prior: pairwise F1 0.893 (P 1.000, R 0.807), incidents per event 1.64, mixed incidents 1, incidents 1115
+2026-11-10 16:04:36 G2 vs G1: diff -0.572, 95% CI [-0.576, -0.179] -> worse

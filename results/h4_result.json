@@ -1,0 +1,61 @@
+{
+ "hypothesis": "H4",
+ "chosen": {
+  "G1": {
+   "W": 720
+  },
+  "G2": {
+   "W": 2880,
+   "rho": 0.1
+  }
+ },
+ "alerts": 22420,
+ "labelled_alerts": 1996,
+ "methods": {
+  "G0": {
+   "precision": 0.0,
+   "recall": 0.0,
+   "f1": 0.0,
+   "incidents_per_event": 30.242424242424242,
+   "mixed_incidents": 0,
+   "incidents_total": 22420,
+   "events_detected": 66
+  },
+  "G1": {
+   "precision": 0.9933958985053876,
+   "recall": 0.9629490408924319,
+   "f1": 0.9779355454429068,
+   "incidents_per_event": 1.4848484848484849,
+   "mixed_incidents": 4,
+   "incidents_total": 1913,
+   "events_detected": 66
+  },
+  "G2": {
+   "precision": 0.9999954961041301,
+   "recall": 0.2544505845868927,
+   "f1": 0.40567616653206795,
+   "incidents_per_event": 7.409090909090909,
+   "mixed_incidents": 1,
+   "incidents_total": 3516,
+   "events_detected": 66
+  },
+  "G2_subsystem_prior": {
+   "precision": 0.9999971603090719,
+   "recall": 0.8071447726402791,
+   "f1": 0.8932806725161774,
+   "incidents_per_event": 1.6363636363636365,
+   "mixed_incidents": 1,
+   "incidents_total": 1115,
+   "events_detected": 66
+  }
+ },
+ "bootstrap_G2_vs_G1": {
+  "diff": -0.5722593789108389,
+  "ci95": [
+   -0.5764284247091608,
+   -0.17874479206347205
+  ],
+  "replicates": 5000
+ },
+ "verdict": "worse"
+}
