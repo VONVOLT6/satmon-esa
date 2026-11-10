@@ -16,3 +16,11 @@ docs/guide/
 dashboard/node_modules/
 dashboard/dist/
 dashboard/tsconfig.tsbuildinfo
+
+# Large caches and process logs from C2-C3 runs (regenerable)
+models/**/c2_*_flags.npy
+results/c3_cache.pkl
+results/*.out
+results/*.err
+results/fetch_all.log
+results/prepare_full*.log
