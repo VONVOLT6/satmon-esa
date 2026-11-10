@@ -9,6 +9,12 @@ import Compute from "../sections/Compute";
 import Contributions from "../sections/Contributions";
 import ExperimentalAnalysis from "../sections/ExperimentalAnalysis";
 import Improvements from "../sections/Improvements";
+import AdaptiveC1 from "../sections/AdaptiveC1";
+import ReliabilityC2 from "../sections/ReliabilityC2";
+import CorrelationC3 from "../sections/CorrelationC3";
+import ResponseC4 from "../sections/ResponseC4";
+import AblationC5 from "../sections/AblationC5";
+import RareEvents from "../sections/RareEvents";
 
 type Group = { group?: string };
 const SECTIONS: ({ id: string; letter: string; title: string; el: typeof Overview } & Group)[] = [
@@ -19,9 +25,15 @@ const SECTIONS: ({ id: string; letter: string; title: string; el: typeof Overvie
   { id: "events", letter: "E", title: "Anomaly detection analysis", el: Events },
   { id: "stability", letter: "F", title: "Training stability", el: Stability },
   { id: "compute", letter: "G", title: "Training and compute", el: Compute },
-  { id: "contributions", letter: "H", title: "Proposed contributions", el: Contributions },
-  { id: "experiments", group: "Feature experiments · Mission 2", letter: "I", title: "Experimental analysis", el: ExperimentalAnalysis },
-  { id: "improvements", letter: "J", title: "Improvements achieved", el: Improvements },
+  { id: "contributions", group: "Our contributions · Mission 1", letter: "H", title: "Contributions at a glance", el: Contributions },
+  { id: "c1", letter: "I", title: "C1 Adaptive computation", el: AdaptiveC1 },
+  { id: "c2", letter: "J", title: "C2 Sensor reliability", el: ReliabilityC2 },
+  { id: "c3", letter: "K", title: "C3 Incident correlation", el: CorrelationC3 },
+  { id: "c4", letter: "L", title: "C4 Cost-aware response", el: ResponseC4 },
+  { id: "c5", letter: "M", title: "C5 Ablation", el: AblationC5 },
+  { id: "rare", letter: "N", title: "Rare events (H6)", el: RareEvents },
+  { id: "experiments", group: "Feature experiments · Mission 2", letter: "O", title: "Experimental analysis", el: ExperimentalAnalysis },
+  { id: "improvements", letter: "P", title: "Improvements achieved", el: Improvements },
 ];
 
 export default function Research() {

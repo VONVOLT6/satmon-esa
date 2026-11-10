@@ -1,4 +1,4 @@
-import { BrainCircuit, CheckCircle2, CircleDashed, Database, FlaskConical, Ruler } from "lucide-react";
+import { BrainCircuit, CheckCircle2, Database, FlaskConical, Ruler } from "lucide-react";
 import { Chip, Panel, Section } from "../components/ui";
 import { dataset, label, SEEDS, totalTestEvents } from "../data/model";
 import type { SectionProps } from "./types";
@@ -49,8 +49,8 @@ export default function Overview({ id, letter, title }: SectionProps) {
               <div><b className="text-slate-100">Telemanom-ESA-Pruned</b> <Chip tone="good">reproduced</Chip><p className="mt-1 text-slate-400">Same model, but forecast errors below 0.007 are ignored. The paper's best Mission 1 detector.</p></div>
             </li>
             <li className="flex gap-3">
-              <CircleDashed className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-              <div><b className="text-slate-100">Improved variants (ours)</b> <Chip tone="warn">not yet evaluated</Chip><p className="mt-1 text-slate-400">A data-tuned error floor and contributions C1-C3 (Section H) are in progress. No test-set results exist for them yet, so none are shown as improvements.</p></div>
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
+              <div><b className="text-slate-100">Improved variants (ours)</b> <Chip tone="good">tested once on the test set</Chip><p className="mt-1 text-slate-400">Contributions C1-C5, a calibrated error floor and a rare-event path, each fixed in the protocol before its test run. Results and verdicts are in sections H-N.</p></div>
             </li>
           </ul>
         </Panel>
