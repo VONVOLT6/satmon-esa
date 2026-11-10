@@ -164,12 +164,14 @@ Each step resumes after an interruption. `run_seeds.py 21_months 42 1 2 3 4` run
 |---|---|
 | `results/telemanom_<months>_seed<n>_last.json` | All official metrics for one run |
 | `results/seed_summary_<months>_last.md` | Mean, spread and per-seed values |
-| `results/figures/` | Charts used in this report, and `tables.json` |
+| `results/figures/` | Charts used in this report (1-6 reproduction, 7-11 contributions C1-C5), and `tables.json` |
+| `results/h1_result.json` ... `h5_result.json`, `c5_result.json` | Test-set results of each hypothesis and the ablation |
+| `results/test_log.md` | Every test-set run, with date and commit |
 | `models/telemanom_<months>_seed<n>/last.pt` | Trained model weights |
 
 ## 9. Limitations
 
-1. Only the six lightweight channels of Mission 1 have been evaluated so far, not the full 76-channel set or Mission 2.
+1. The LSTM results use only the six lightweight channels of Mission 1. C3 (section 16) uses all 76 channels with cheap per-channel detectors, not the LSTM. Mission 2 has not been evaluated.
 2. The model is a PyTorch port, not the original TensorFlow 2.5.1 code. The settings and thresholding code match, but small numerical differences remain. They are the most likely reason the unpruned variant has lower precision than the paper.
 3. The current Zenodo labels give 65 test events. The paper's recall values (0.894 = 59/66 and 0.424 = 28/66) imply 66. This suggests a later label revision, which we have not confirmed.
 4. The Pruned variant's 0.007 threshold was hand-picked by the paper's authors. Its results depend on that one number.
@@ -177,9 +179,11 @@ Each step resumes after an interruption. `run_seeds.py 21_months 42 1 2 3 4` run
 
 ## 10. Next Steps
 
-1. Freeze the evaluation protocol: validation folds inside the training period and the comparisons we will report (phase P2).
-2. Build adaptive computation (C1): a cheap detector screens most data, and the LSTM runs only where confidence is low, impact is high or the pattern is unfamiliar. It will be evaluated against this baseline on detection quality and compute cost.
-3. Improve rare-event recall without adding false alarms. This is the baseline's clearest weakness.
+Status as of 2026-11-10:
+
+1. Freeze the evaluation protocol (phase P2): **done**, see `PROTOCOL.md` and section 12.
+2. Build adaptive computation (C1): **done and confirmed**, see section 13. The later contributions C2-C5 are in sections 14-18.
+3. Improve rare-event recall without adding false alarms: **still open**. None of the contributions changes recall: the baseline finds 4 of 36 rare events, and the calibrated floor in section 12 adds only 2-3.
 
 ## 11. Conclusion
 
@@ -248,6 +252,8 @@ Limits:
 - **Lookback found on development data:** the 2,100-sample lookback was found after a first design failed on the development period. Both the failure and the fix are recorded in `PROTOCOL.md`.
 - **Interrupted run:** the test run was interrupted by a PC shutdown during the timing step and re-executed. The scores are deterministic and identical in both runs (`results/h2_run.log`).
 
+![C1 adaptive computation](results/figures/7_c1_adaptive_computation.png)
+
 Full numbers: `results/h2_result.json`, `results/c1_dev.json`.
 
 ## 14. Update (2026-11-09): sensor reliability (C2, hypotheses H3a and H3b)
@@ -287,6 +293,8 @@ Bias, noise, drift and dropout faults are almost always caught and attributed. S
 - *Single-channel faults only:* faults hitting several sensors at once were not tested.
 - *Favourable group:* C2 relies on correlated peer channels, which this 6-channel group provides. Groups without close peers would be harder.
 
+![C2 sensor reliability](results/figures/8_c2_sensor_reliability.png)
+
 Full numbers: `results/h3_result.json`, `results/c2_dev.json`.
 
 ## 15. Update (2026-11-09): cost-aware response replay (C4, hypothesis H5)
@@ -315,6 +323,8 @@ Test alarms, 5 seeds pooled: 170 anomaly, 20 rare event, 287 sensor fault and 17
 P2 wins mainly when delaying a real anomaly is cheap (D = 2: 8 of 12 points) and false pages are expensive (F = 3). It never wins when delay is expensive (D = 10: 0 of 12). It misjudges some real anomalies as ticket-worthy, which is costly whenever delay matters.
 
 **What did work:** the simple C2-driven rule P1 cuts response cost against paging everything at **every** grid point, from 64.8 to 17.2 at the central point. For the response-planning question, a reliable sensor-fault label matters more than a learned cost model. This negative result is useful in its own right: a more complex policy is not automatically better.
+
+![C4 response cost](results/figures/10_c4_response_cost.png)
 
 Full numbers: `results/h5_result.json`.
 
@@ -346,6 +356,8 @@ Training data contains few incidents, so the residual-activity correlations are 
 - **The known subsystem structure** used as the graph keeps precision at 1.000 (only 1 mixed incident, against 4 for G1) with F1 0.893. That would matter on missions where incidents in different subsystems happen at the same time.
 
 Limits: channel names are anonymised, so any graph shows statistical association, not physical causation. The cheap per-channel detectors also raise many alerts on nominal data (20,424 of 22,420 in the test period). That affects operator load, but not the pairwise grouping score.
+
+![C3 incident correlation](results/figures/9_c3_incident_correlation.png)
 
 Full numbers: `results/h4_result.json`, `results/c3_dev.json`.
 
@@ -412,5 +424,7 @@ Operator items are alarm events, or incidents when C3 is on, per test period. No
 - cuts response cost at the central point from 64.8 to 17.2.
 
 On clean data it matches the baseline (0.799 against 0.801). The study's limits are those of its parts: sensor faults are injected, there is one 6-channel group, and the cost grid is declared rather than measured.
+
+![C5 ablation](results/figures/11_c5_ablation.png)
 
 Full numbers: `results/c5_result.json`. Run log: `results/c5.log`.

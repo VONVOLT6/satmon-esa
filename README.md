@@ -1,8 +1,18 @@
 # satmon-esa
 
-Baseline reproduction for our satellite health-monitoring project on the ESA Anomaly Detection Benchmark (ESA-ADB).
+Trust-aware, resource-efficient satellite health monitoring on the ESA Anomaly Detection Benchmark (ESA-ADB).
 
-Phase P0 trains the paper's Telemanom-ESA model on Mission 1 channels 41-46 (21 months of training data). It then scores the model with the official metric code. The paper's target is a corrected event-wise F0.5 of 0.776 for Telemanom-ESA-Pruned.
+The project first reproduces the paper's Telemanom-ESA model on Mission 1 (channels 41-46) with the official metric code: Pruned scores a corrected event-wise F0.5 of 0.801 against the paper's 0.776. It then tests five contributions on top of it, each under a protocol frozen before its test run (`PROTOCOL.md`).
+
+| Contribution | Result on the test period | Status |
+|---|---|---|
+| C1 adaptive computation | Same F0.5 (0.801), LSTM on 6.4% of the data, 20.3× faster inference | **Confirmed** |
+| C2 sensor reliability | F0.5 0.341 → 0.628 with injected sensor faults; no harm on clean data | **Confirmed** (injected faults) |
+| C3 incident correlation | Learned graph worse than time-only grouping; time grouping cuts 30.2 alerts per event to 1.48 | Not supported |
+| C4 cost-aware response | Learned policy loses to the simple C2 sensor rule, which cuts response cost 64.8 → 17.2 | Not supported |
+| C5 ablation | Best combination: C1 + C2 + time grouping + C2 rule | Descriptive |
+
+Full write-up with charts: [RESULTS.md](RESULTS.md). Every test-set run: [results/test_log.md](results/test_log.md).
 
 ## What is here
 
@@ -15,6 +25,13 @@ Phase P0 trains the paper's Telemanom-ESA model on Mission 1 channels 41-46 (21 
 | `src/metrics.py` | Loads the official metric file from `baseline/` without the Docker framework. |
 | `src/test_metrics.py` | 10 hand-calculated checks on the official metric. |
 | `src/smoke_test.py` | Checks training, prediction shapes and thresholding on made-up data. |
+| `src/stats.py` | Paired monthly-block bootstrap used for every comparison. |
+| `src/c1_router.py`, `c1_dev.py`, `test_h2.py` | C1 cheap screening tier and LSTM bursts; development selection; test. |
+| `src/c2_reliability.py`, `c2_run.py` | C2 fault injection, peer-consistency classifier; `dev` and `test` stages. |
+| `src/prepare_full.py`, `c3_correlation.py`, `c3_run.py` | C3 on all 76 channels: data preparation, alert grouping, `dev` and `test` stages. |
+| `src/c4_policy.py` | C4 page/ticket/ignore replay over the cost grid; `dev` and `test` stages. |
+| `src/c5_ablation.py` | C5 ablation of all configurations; `dev` and `test` stages. |
+| `src/make_figures.py`, `make_contribution_figures.py` | Charts in `results/figures/` from saved results only. |
 | `baseline/` | kplabs-pl/ESA-ADB at commit 67194d3, unmodified (not in git). |
 
 ## Run it
@@ -32,6 +49,18 @@ python prepare.py 21_months
 python test_metrics.py
 python train.py 21_months --seed 42
 python evaluate.py 21_months --seed 42
+```
+
+Contributions, after the five 21-month seeds are trained and evaluated (`run_seeds.py`). Each `dev` stage only uses the development period; each `test` stage runs once and appends to `results/test_log.md`:
+
+```bash
+python dev_tune.py 42 1 2 3 4 --dev-only && python test_h1.py
+python c1_dev.py 42 1 2 3 4 && python test_h2.py
+python c2_run.py dev && python c2_run.py test
+python c4_policy.py dev && python c4_policy.py test
+python fetch_subset.py --all && python prepare_full.py && python c3_run.py dev && python c3_run.py test
+python c5_ablation.py dev && python c5_ablation.py test
+python make_figures.py && python make_contribution_figures.py
 ```
 
 ## Differences from the official setup
