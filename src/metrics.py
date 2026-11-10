@@ -16,7 +16,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 METRICS_DIR = ROOT / "baseline" / "timeeval" / "metrics"
 RAW = ROOT / "data" / "raw" / "ESA-Mission1"
-CATEGORIES = {"all": ["Rare Event", "Anomaly"], "anomaly": ["Anomaly"]}
+CATEGORIES = {"all": ["Rare Event", "Anomaly"], "anomaly": ["Anomaly"], "rare": ["Rare Event"]}
 
 
 def _load_esa_scores():
