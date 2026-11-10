@@ -1,0 +1,27 @@
+2026-11-10 20:38:24 seed 42 dev floor 0.007: flags computed [77s]
+2026-11-10 20:40:05 seed 42 dev floor 0.0: flags computed [101s]
+2026-11-10 20:41:28 seed 42 dev floor 0.003: flags computed [83s]
+2026-11-10 20:42:55 seed 42 dev floor 0.005: flags computed [87s]
+2026-11-10 20:43:02 seed 42: B0 F0.5 0.792 (rare tp 3); best 2|10800|0.003 F0.5 0.891 (rare tp 9, fp 1)
+2026-11-10 20:44:23 seed 1 dev floor 0.007: flags computed [81s]
+2026-11-10 20:45:53 seed 1 dev floor 0.0: flags computed [90s]
+2026-11-10 20:47:06 seed 1 dev floor 0.003: flags computed [73s]
+2026-11-10 20:48:20 seed 1 dev floor 0.005: flags computed [74s]
+2026-11-10 20:48:28 seed 1: B0 F0.5 0.773 (rare tp 2); best 2|10800|0.0 F0.5 0.896 (rare tp 12, fp 2)
+2026-11-10 20:49:44 seed 2 dev floor 0.007: flags computed [76s]
+2026-11-10 20:51:12 seed 2 dev floor 0.0: flags computed [88s]
+2026-11-10 20:52:26 seed 2 dev floor 0.003: flags computed [73s]
+2026-11-10 20:53:35 seed 2 dev floor 0.005: flags computed [69s]
+2026-11-10 20:53:41 seed 2: B0 F0.5 0.773 (rare tp 2); best 2|10800|0.003 F0.5 0.891 (rare tp 9, fp 1)
+2026-11-10 20:54:54 seed 3 dev floor 0.007: flags computed [72s]
+2026-11-10 20:56:25 seed 3 dev floor 0.0: flags computed [91s]
+2026-11-10 20:57:39 seed 3 dev floor 0.003: flags computed [74s]
+2026-11-10 20:58:57 seed 3 dev floor 0.005: flags computed [78s]
+2026-11-10 20:59:06 seed 3: B0 F0.5 0.752 (rare tp 2); best 2|10800|0.0 F0.5 0.905 (rare tp 13, fp 2)
+2026-11-10 21:00:21 seed 4 dev floor 0.007: flags computed [75s]
+2026-11-10 21:01:47 seed 4 dev floor 0.0: flags computed [87s]
+2026-11-10 21:03:01 seed 4 dev floor 0.003: flags computed [73s]
+2026-11-10 21:04:16 seed 4 dev floor 0.005: flags computed [75s]
+2026-11-10 21:04:24 seed 4: B0 F0.5 0.792 (rare tp 3); best 2|10800|0.0 F0.5 0.905 (rare tp 13, fp 2)
+2026-11-10 21:04:24 mean development F0.5 by setting (p|W s|f_r): 2|1800|0.0 0.723, 2|1800|0.003 0.816, 2|1800|0.005 0.816, 2|3600|0.0 0.860, 2|3600|0.003 0.864, 2|3600|0.005 0.816, 2|10800|0.0 0.887, 2|10800|0.003 0.891, 2|10800|0.005 0.816, 3|1800|0.0 0.558, 3|1800|0.003 0.643, 3|1800|0.005 0.795, 3|3600|0.0 0.721, 3|3600|0.003 0.769, 3|3600|0.005 0.795, 3|10800|0.0 0.849, 3|10800|0.003 0.870, 3|10800|0.005 0.795
+2026-11-10 21:04:24 B0 development F0.5 0.776; chosen {'p': 2, 'W': 10800, 'f_r': 0.003} with 0.891
