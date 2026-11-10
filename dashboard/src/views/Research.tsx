@@ -7,8 +7,6 @@ import Events from "../sections/Events";
 import Stability from "../sections/Stability";
 import Compute from "../sections/Compute";
 import Contributions from "../sections/Contributions";
-import ExperimentalAnalysis from "../sections/ExperimentalAnalysis";
-import Improvements from "../sections/Improvements";
 import AdaptiveC1 from "../sections/AdaptiveC1";
 import ReliabilityC2 from "../sections/ReliabilityC2";
 import CorrelationC3 from "../sections/CorrelationC3";
@@ -32,8 +30,6 @@ const SECTIONS: ({ id: string; letter: string; title: string; el: typeof Overvie
   { id: "c4", letter: "L", title: "C4 Cost-aware response", el: ResponseC4 },
   { id: "c5", letter: "M", title: "C5 Ablation", el: AblationC5 },
   { id: "rare", letter: "N", title: "Rare events (H6)", el: RareEvents },
-  { id: "experiments", group: "Feature experiments · Mission 2", letter: "O", title: "Experimental analysis", el: ExperimentalAnalysis },
-  { id: "improvements", letter: "P", title: "Improvements achieved", el: Improvements },
 ];
 
 export default function Research() {

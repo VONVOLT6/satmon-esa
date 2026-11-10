@@ -3,7 +3,7 @@
 An interactive presentation of the ESA-ADB reproduction results, with two views:
 
 - **Mission Control** (`#/mission`): project overview with a 3D Earth, real dataset facts and project status.
-- **Research Results** (`#/research`): sections A-G cover the ESA-ADB Mission 1 reproduction (overview, paper vs ours, baseline vs Pruned, all metrics, event-level analysis, seed stability, compute). Sections H-N cover our contributions, each tested once on the test set: H is the overview with every verdict and the calibrated floor (H1), then C1 adaptive computation (I), C2 sensor reliability (J), C3 incident correlation (K), C4 cost-aware response (L), C5 ablation (M) and rare events (N). Sections O-P cover the team's Random Forest feature experiments on Mission 2 channel 9: O is Experimental analysis, with six analyses, and P is Improvements achieved. Those use sample-level metrics and are kept apart from A-N.
+- **Research Results** (`#/research`): sections A-G cover the ESA-ADB Mission 1 reproduction (overview, paper vs ours, baseline vs Pruned, all metrics, event-level analysis, seed stability, compute). Sections H-N cover our contributions, each tested once on the test set: H is the overview with every verdict and the calibrated floor (H1), then C1 adaptive computation (I), C2 sensor reliability (J), C3 incident correlation (K), C4 cost-aware response (L), C5 ablation (M) and rare events (N). The team's separate Random Forest feature experiments on Mission 2 channel 9 have their own dashboard, outside this repository.
 
 Built with React 18, TypeScript, Vite, Tailwind CSS, Recharts, three.js and Lucide icons.
 
@@ -26,8 +26,6 @@ npm run data       # runs ../src/export_dashboard_data.py (sections A-G) and ../
 ```
 
 Sections H-N read `src/data/contributions.json`, built from the test and development result files (`results/h1_result.json` ... `h6_result.json`, `c5_result.json` and the development JSONs).
-
-Sections O-P read `src/data/channel9.json`, built by `../src/export_channel9_data.py` from `results/channel9_rf/`. That folder holds the teammate's result files, copied unchanged (see `PROVENANCE.md`), plus `team_reported.json` for values supplied from their screenshots: incident counts, model sizes and latency. Those values are marked "team-reported" in the dashboard. The baseline-vs-calibrated threshold comparison and monthly recall are shown as "data not yet provided" until their result files are added.
 
 Run it again after any new experiment. Published values come from Kotowski et al. (2024), Supplementary Table 13 and Table 2. The exact source is noted in `src/export_dashboard_data.py`.
 
