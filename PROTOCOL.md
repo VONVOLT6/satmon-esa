@@ -154,3 +154,18 @@ C5 measures what each contribution adds when they are combined in one pipeline. 
   - *Operator load:* items raised (incidents with C3, alarm events without), and items that mix a real event with an injected fault.
   - *Response cost:* cost at the central grid point and mean regret over the 36-point grid. Cost stays per alarm event, as in addendum 4; C3 does not change it.
 - **Intervals:** paired monthly-block bootstrap of the injected-test F0.5 difference for A8 − A0 and for A8 − L1 ... L4. Monthly bootstrap of the central-point cost difference for A8 − L4.
+
+### Addendum 6 (2026-11-10): telecommand-gated rare-event path (hypothesis H6), before any tuning run
+
+**Motivation (development period only).** The baseline catches 3 of 16 development rare events. In the missed ones, the LSTM error is high, within the top 0.01-0.1% of nominal time, but stays below the 0.007 floor (`src/rare_diag.py`, `results/rare_diag.csv`). High-priority telecommands (priority 2 or 3, 149 executions in the development period, 0.1% of its time within 30 minutes after one) precede 9 of 16 development rare events within 30 minutes, and none of the 17 development anomalies. Rare events are largely commanded operations. Telecommands are an input that ESA-ADB provides and that operators know in real time. They are not labels.
+
+- **Detector R:**
+  - *Gate:* open a gate for W after each telecommand of priority ≥ p.
+  - *Alarms:* inside a gate, alarm where the always-on LSTM's errors pass the original `errors.py` thresholding with a lower floor f_r. Outside gates nothing changes.
+  - *Output:* the system output is B0's alarms OR R's.
+- **Grid (18 settings):** p ∈ {2, 3}, W ∈ {30 min, 1 h, 3 h}, f_r ∈ {0, 0.003, 0.005}.
+- **Selection:** the setting with the highest mean development F0.5 (anomalies and rare events) over the 5 seeds of the 21-month models. Ties go to the higher f_r, then the shorter W, then the higher p.
+- **Comparison only, not selectable:** "gate alone", which alarms on every gate window without the LSTM, at the selected p and W.
+- **H6 (confirmatory):** on the test set, F0.5 of B0 ∪ R improves on B0. The 95% paired monthly-block bootstrap interval must lie entirely above 0. It is the only hypothesis in this addendum.
+- **Also reported:** rare-event recall, anomalies-only F0.5 (non-inferiority margin −0.02, descriptive), false-alarm events, and gate-alone scores.
+- **Limits fixed in advance:** labels and telecommands are restricted to channels 41-46 as before. The priority field is ESA's own, and command meanings are anonymised.
