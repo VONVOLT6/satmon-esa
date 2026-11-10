@@ -13,7 +13,7 @@ The project first reproduces the paper's Telemanom-ESA model on Mission 1 (chann
 | C5 ablation | Best combination: C1 + C2 + time grouping + C2 rule | Descriptive |
 | Rare-event path (telecommand gates) | Rare events caught 4 → 9.8 of 36; overall F0.5 0.801 → 0.835, 95% CI includes 0 | Not confirmed |
 
-Full write-up with charts: [RESULTS.md](RESULTS.md). Every test-set run: [results/test_log.md](results/test_log.md).
+Full write-up with charts: [RESULTS.md](RESULTS.md). Conference paper draft (IEEE format): [paper/](paper/README.md). Every test-set run: [results/test_log.md](results/test_log.md).
 
 ## What is here
 
