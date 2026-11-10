@@ -11,6 +11,7 @@ The project first reproduces the paper's Telemanom-ESA model on Mission 1 (chann
 | C3 incident correlation | Learned graph worse than time-only grouping; time grouping cuts 30.2 alerts per event to 1.48 | Not supported |
 | C4 cost-aware response | Learned policy loses to the simple C2 sensor rule, which cuts response cost 64.8 → 17.2 | Not supported |
 | C5 ablation | Best combination: C1 + C2 + time grouping + C2 rule | Descriptive |
+| Rare-event path (telecommand gates) | Rare events caught 4 → 9.8 of 36; overall F0.5 0.801 → 0.835, 95% CI includes 0 | Not confirmed |
 
 Full write-up with charts: [RESULTS.md](RESULTS.md). Every test-set run: [results/test_log.md](results/test_log.md).
 
@@ -31,6 +32,7 @@ Full write-up with charts: [RESULTS.md](RESULTS.md). Every test-set run: [result
 | `src/prepare_full.py`, `c3_correlation.py`, `c3_run.py` | C3 on all 76 channels: data preparation, alert grouping, `dev` and `test` stages. |
 | `src/c4_policy.py` | C4 page/ticket/ignore replay over the cost grid; `dev` and `test` stages. |
 | `src/c5_ablation.py` | C5 ablation of all configurations; `dev` and `test` stages. |
+| `src/rare_diag.py`, `rare_events.py` | Rare-event diagnosis and the telecommand-gated path R; `dev` and `test` stages. |
 | `src/make_figures.py`, `make_contribution_figures.py` | Charts in `results/figures/` from saved results only. |
 | `baseline/` | kplabs-pl/ESA-ADB at commit 67194d3, unmodified (not in git). |
 
@@ -60,6 +62,7 @@ python c2_run.py dev && python c2_run.py test
 python c4_policy.py dev && python c4_policy.py test
 python fetch_subset.py --all && python prepare_full.py && python c3_run.py dev && python c3_run.py test
 python c5_ablation.py dev && python c5_ablation.py test
+python rare_events.py dev && python rare_events.py test
 python make_figures.py && python make_contribution_figures.py
 ```
 
