@@ -359,5 +359,58 @@ Full numbers: `results/h4_result.json`, `results/c3_dev.json`.
 | **C2 sensor reliability** | H3a, H3b | **+0.288 F0.5** with injected sensor faults; no harm on clean data | **Confirmed** (injected faults only) |
 | C3 incident correlation | H4 | Learned graph worse than time-only grouping; time grouping cuts alerts 30.2 → 1.48 per event | Not supported |
 | C4 cost-aware response | H5 | Learned policy best at 12 of 36 cost points; the C2 sensor rule beats page-everything at all 36 | Not supported |
+| C5 ablation | descriptive | C1 + C2 + time grouping + the C2 ticket rule (L4) is the best combination: F0.5 0.628 vs 0.341, LSTM on 11.9%, 8% fewer operator items, cost 17.2 vs 64.8 | See section 18 |
 
 Every test-set run is listed in `results/test_log.md`. Each was run once, after its design was committed in `PROTOCOL.md`.
+
+## 18. Update (2026-11-10): ablation of the combined system (C5)
+
+**Idea.** Each contribution was tested on its own. C5 puts them into one pipeline and switches each one off in turn, to show what each adds when combined. The design (configurations A0-A8 and leave-one-out L1-L4) was committed in `PROTOCOL.md` addendum 5 before the run. Nothing was re-tuned. The study is descriptive, with no new hypothesis.
+
+**Pipeline:**
+- *Detector:* the C1 router or the always-on LSTM.
+- *C2:* removes sensor-fault alarms from the system stream and tickets them.
+- *C3:* merges alarms less than 2,880 samples (24 hours) apart into one incident. The learned graph links all six channels, so here it reduces to time grouping.
+- *C4:* chooses page, ticket or ignore with the learned cost model.
+
+**Setting.** Channels 41-46, 21-month models, 5 seeds, on the test period with C2's 50 injected sensor faults. F0.5 on the clean test period is shown too. Cost is at the central grid point (M = 50, D = 5, F = 1, S = 1); regret is the mean over all 36 grid points.
+
+| Config | What is on | F0.5 injected | F0.5 clean | LSTM share (injected / clean) | Operator items | Cost | Mean regret |
+|---|---|---|---|---|---|---|---|
+| A0 | always-on LSTM | 0.341 | 0.801 | 100% / 100% | 98.8 | 64.8 | 129.6 |
+| A1 | cheap tier alone, no LSTM | 0.106 | 0.153 | 0% / 0% | 456.0 | 410.0 | 820.0 |
+| A2 | C1 confidence only | 0.337 | 0.801 | 11.9% / 6.4% | 100.0 | 66.0 | 132.0 |
+| A3 | C1 confidence + impact | 0.337 | 0.801 | 11.9% / 6.4% | 100.0 | 66.0 | 132.0 |
+| A4 | C1 full | 0.341 | 0.801 | 11.9% / 6.4% | 98.8 | 64.8 | 129.6 |
+| A5 | C1 + C2 | 0.628 | 0.799 | 11.9% / 6.4% | 98.8 | **17.2** | **33.5** |
+| A6 | C1 + C3 | 0.341 | 0.801 | 11.9% / 6.4% | **81.0** | 64.8 | 129.6 |
+| A7 | C1 + C4 (no-C2 variant) | 0.341 | 0.801 | 11.9% / 6.4% | 98.8 | 70.2 | 61.3 |
+| A8 | full system | 0.628 | 0.799 | 11.9% / 6.4% | 91.2 | 34.9 | 41.4 |
+| L1 | A8 minus C1 | 0.628 | 0.799 | 100% / 100% | 91.2 | 34.9 | 41.4 |
+| L2 | A8 minus C2 | 0.341 | 0.801 | 11.9% / 6.4% | 81.0 | 70.2 | 61.3 |
+| L3 | A8 minus C3 | 0.628 | 0.799 | 11.9% / 6.4% | 98.8 | 34.9 | 41.4 |
+| **L4** | **A8 minus C4 (C2 ticket rule instead)** | **0.628** | 0.799 | 11.9% / 6.4% | 91.2 | **17.2** | **33.5** |
+
+Operator items are alarm events, or incidents when C3 is on, per test period. No incident mixed a real event with an injected fault in any configuration.
+
+**Intervals (paired monthly bootstrap, injected test).**
+- *Full system against the baseline (A8 − A0):* F0.5 +0.288, 95% CI [+0.223, +0.356].
+- *Removing C2 (A8 − L2):* the same +0.288.
+- *Removing C1, C3 or C4 (A8 − L1, L3, L4):* F0.5 unchanged, interval [0, 0].
+- *Cost, keeping C4 against the C2 rule (A8 − L4):* +17.7, 95% CI [−9.7, +56.6].
+
+**What each contribution adds:**
+- **C1 (compute):** the full router keeps every score of the always-on LSTM while running it on 11.9% of the faulty test data and 6.4% of the clean test data. Injected faults trigger extra bursts, which is why the share is higher. Without the novelty signal (A2, A3), the router raises slightly more alarms on the faulty data (100.0 against 98.8 per period) and F0.5 drops slightly, from 0.341 to 0.337. On clean data the three variants are identical. The cheap tier cannot replace the LSTM: on its own (A1) F0.5 falls to 0.106, and it raises 4.6 times as many alarms.
+- **C2 (detection quality):** the only component that changes F0.5. Removing it loses all of the +0.288 gain, and it is also what makes the cheap response policy possible. The cost of keeping it is one real-event alarm removed in one of the five clean seeds (0.801 → 0.799).
+- **C3 (operator load):** time grouping cuts the items an operator handles from 98.8 to 81.0 (−18%) on its own. In the full system it cuts them to 91.2 (−8%), because sensor tickets and system alarms are kept in separate streams. It never merged a real event with a sensor fault.
+- **C4 (response cost):** the learned policy makes the combined system worse. Replacing it with C2's simple ticket rule (L4) halves the central cost, from 34.9 to 17.2, and lowers the mean regret from 41.4 to 33.5. This matches the H5 result. Without C2, the learned policy (A7) still halves the regret of paging everything (61.3 against 129.6), so a learned triage has value only when no sensor-fault label exists.
+
+**Conclusion.** The best combination is **L4**: the C1 router, C2 sensor reliability, C3 time grouping and the C2 ticket rule. Compared with the always-on baseline on faulty data, it:
+- raises F0.5 from 0.341 to 0.628;
+- runs the LSTM on 11.9% of the data;
+- gives the operator 8% fewer items;
+- cuts response cost at the central point from 64.8 to 17.2.
+
+On clean data it matches the baseline (0.799 against 0.801). The study's limits are those of its parts: sensor faults are injected, there is one 6-channel group, and the cost grid is declared rather than measured.
+
+Full numbers: `results/c5_result.json`. Run log: `results/c5.log`.
