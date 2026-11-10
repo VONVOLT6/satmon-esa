@@ -183,7 +183,7 @@ Status as of 2026-11-10:
 
 1. Freeze the evaluation protocol (phase P2): **done**, see `PROTOCOL.md` and section 12.
 2. Build adaptive computation (C1): **done and confirmed**, see section 13. The later contributions C2-C5 are in sections 14-18.
-3. Improve rare-event recall without adding false alarms: **still open**. None of the contributions changes recall: the baseline finds 4 of 36 rare events, and the calibrated floor in section 12 adds only 2-3.
+3. Improve rare-event recall without adding false alarms: **attempted in section 19**. A telecommand-gated path raises rare-event detections from 4 to about 10 of 36 with one false alarm, but the overall gain is not confirmed.
 
 ## 11. Conclusion
 
@@ -371,6 +371,7 @@ Full numbers: `results/h4_result.json`, `results/c3_dev.json`.
 | **C2 sensor reliability** | H3a, H3b | **+0.288 F0.5** with injected sensor faults; no harm on clean data | **Confirmed** (injected faults only) |
 | C3 incident correlation | H4 | Learned graph worse than time-only grouping; time grouping cuts alerts 30.2 → 1.48 per event | Not supported |
 | C4 cost-aware response | H5 | Learned policy best at 12 of 36 cost points; the C2 sensor rule beats page-everything at all 36 | Not supported |
+| Rare-event path (telecommand gates) | H6 | F0.5 0.835 vs 0.801, 95% CI [-0.017, +0.096]; rare events caught 4 → 9.8 of 36, at the cost of 1 false alarm | Not confirmed (see section 19) |
 | C5 ablation | descriptive | C1 + C2 + time grouping + the C2 ticket rule (L4) is the best combination: F0.5 0.628 vs 0.341, LSTM on 11.9%, 8% fewer operator items, cost 17.2 vs 64.8 | See section 18 |
 
 Every test-set run is listed in `results/test_log.md`. Each was run once, after its design was committed in `PROTOCOL.md`.
@@ -428,3 +429,48 @@ On clean data it matches the baseline (0.799 against 0.801). The study's limits 
 ![C5 ablation](results/figures/11_c5_ablation.png)
 
 Full numbers: `results/c5_result.json`. Run log: `results/c5.log`.
+
+## 19. Update (2026-11-10): rare events with telecommand gates (hypothesis H6)
+
+**Problem.** The baseline finds only 4 of 36 test rare events. On the development period (`src/rare_diag.py`) it found 3 of 16. In the missed events the LSTM error is high, within the top 0.01-0.1% of normal time, but stays below the 0.007 floor, so the alarm is discarded.
+
+**Idea.** Rare events are largely planned operations, and operations start with telecommands. High-priority telecommands (ESA's priority 2 or 3) are uncommon. In the development period they were followed within 30 minutes by 9 of 16 rare events and by none of the 17 anomalies, yet the 30 minutes after them covered only 0.1% of the time.
+
+The rare-event path R works as follows:
+- *Gate:* after each high-priority telecommand, a gate opens for W.
+- *Inside the gate:* the LSTM's alarms count at a lower floor f_r.
+- *Outside gates:* the baseline is unchanged.
+- *Output:* B0's alarms plus R's.
+
+Telecommands are an input ESA-ADB provides and that operators know in real time; they are not labels.
+
+**Development** (`PROTOCOL.md` addendum 6, committed before any tuning; 18 settings, 5 seeds). The rule chose priority ≥ 2, W = 3 hours and f_r = 0.003. The gates cover 0.4% of the test period.
+
+| Development, mean of 5 seeds | F0.5 |
+|---|---|
+| B0 | 0.776 |
+| B0 + R (chosen) | **0.891** |
+
+**Test result (run once, 5 seeds):**
+
+| | B0 | B0 + R | Difference (95% CI) |
+|---|---|---|---|
+| F0.5, all events (H6) | 0.801 | 0.835 | +0.034 [−0.017, +0.096] |
+| F0.5, rare events only | 0.385 | 0.618 | +0.234 [+0.050, +0.488] |
+| F0.5, anomalies only | 0.968 | 0.939 | −0.029 [−0.092, −0.000] |
+| Rare events caught (of 36) | 4 | 9.8 (9-10) | |
+| Anomalies caught (of 29) | 25 | 25 | |
+| False-alarm events | 0 | 1 | |
+| Gate alone, no LSTM (comparison) | | F0.5 0.566: 23 rare, 3 anomalies, 15 false alarms | |
+
+**Verdict: H6 not confirmed.** The system catches more than twice as many rare events, 9.8 against 4, and the rare-event score improves with an interval above zero. However, the all-events interval includes zero, so by the protocol this is not a confirmed improvement.
+
+The path adds one false alarm in every seed. Because a false alarm counts against every category, the anomalies-only score falls by 0.029, beyond the −0.02 margin. The development period promised more (+0.115) than the test delivered (+0.034).
+
+**What this shows:**
+- **Telecommands carry the rare-event signal.** The gate alone, with no LSTM, finds 23 of 36 test rare events, but it also raises 15 false alarms.
+- **The LSTM confirmation is too strict.** At the 0.003 floor the LSTM confirms only about 6 extra rare events. A better confirmation step inside the gates is the clearest next improvement. Any new setting must be chosen on development data and tested as a new hypothesis, not tuned on these test results.
+
+![Rare events](results/figures/12_rare_events.png)
+
+Full numbers: `results/h6_result.json`, `results/rare_dev.json`. Run log: `results/rare.log`.

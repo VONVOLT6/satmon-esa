@@ -217,7 +217,49 @@ def fig_c5():
     plt.close(fig)
 
 
+def fig_rare():
+    r = load("h6_result.json")
+    seeds = list(r["per_seed"])
+    mean = lambda sys_, cat, k: float(np.mean([r["per_seed"][s][sys_][cat][k] for s in seeds]))
+    systems = [("B0", "Always-on LSTM (B0)", BASE), ("R", "B0 + telecommand-gated path", PROPOSED)]
+    ga = r["gate_alone"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(11, 4.0), gridspec_kw={"width_ratios": [1.3, 1]})
+    cats = [("rare", "Rare events\n(of 36)"), ("anomaly", "Anomalies\n(of 29)"), ("all", "False-alarm\nevents")]
+    x = np.arange(len(cats))
+    w = 0.26
+    for i, (key, name, col) in enumerate(systems + [("gate", "Gate alone, no LSTM (comparison)", FAINT)]):
+        vals = [(ga[c]["fp"] if c == "all" else ga[c]["tp"]) if key == "gate" else
+                (mean(key, c, "fp") if c == "all" else mean(key, c, "tp")) for c, _ in cats]
+        bars = a.bar(x + (i - 1) * (w + 0.02), vals, w, color=col, label=name)
+        for bar, v in zip(bars, vals):
+            a.text(bar.get_x() + w / 2, v + 0.5, f"{v:.1f}".rstrip("0").rstrip("."), ha="center", fontsize=9)
+    a.set_xticks(x, [l for _, l in cats])
+    a.set_ylabel("Events, test period (mean of 5 seeds)")
+    a.set_ylim(0, 29)
+    a.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=8.5)
+    a.set_title("What each system catches", loc="left", fontsize=11)
+
+    rows = [("rare", "Rare events only"), ("anomaly", "Anomalies only"), ("all", "All events (H6)")]
+    y = np.arange(len(rows))[::-1]
+    for (c, label), yi in zip(rows, y):
+        bb = r["bootstrap"][c]
+        lo, hi = bb["ci95"]
+        b.plot([lo, hi], [yi, yi], color=PROPOSED, lw=2)
+        b.plot([bb["diff"]], [yi], "o", color=PROPOSED, ms=8, mec="white", mew=2)
+        b.text(hi + 0.02, yi, f"{bb['diff']:+.3f}  [{lo:+.3f}, {hi:+.3f}]", va="center", fontsize=9)
+    b.axvline(0, color=INK2, lw=1)
+    b.set_yticks(y, [l for _, l in rows])
+    b.set_xlim(-0.15, 0.85)
+    b.set_xlabel("F0.5 change vs B0, with 95% CI (paired monthly bootstrap)")
+    b.set_title("Score change", loc="left", fontsize=11)
+    fig.suptitle("Rare events: telecommand gates more than double rare-event detections, but H6 is not confirmed",
+                 x=0.01, ha="left", fontsize=12, fontweight="bold")
+    fig.tight_layout()
+    fig.savefig(OUT / "12_rare_events.png", dpi=160)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
-    for f in [fig_c1, fig_c2, fig_c3, fig_c4, fig_c5]:
+    for f in [fig_c1, fig_c2, fig_c3, fig_c4, fig_c5, fig_rare]:
         f()
         print("done", f.__name__)
