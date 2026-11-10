@@ -83,6 +83,20 @@ For intervals we split the test period into 85 calendar months and decompose the
 The protocol names Holm's correction~\cite{holm1979} across hypotheses. We report unadjusted intervals. Both confirmed results lie far from their decision boundaries.
 
 \section{Methods}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/7_c1_adaptive_computation.png}
+\caption{C1. Left: development F0.5 against the share of data the LSTM runs on, for screening thresholds $\tau$ from 0.995 to 0.9999. Right: measured test-period inference time.}
+\label{fig:c1}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/8_c2_sensor_reliability.png}
+\caption{C2. Left: system-alarm F0.5 against real events, with and without C2. Right: outcome of each injected fault by type (test period, 5 seeds $\times$ 10 faults per type).}
+\label{fig:c2}
+\end{figure*}
+
 \subsection{Calibrated error floor (H1)}
 The Pruned floor of 0.007 was hand-picked. We choose a floor from \{0, 0.003, 0.005, 0.007, 0.01, 0.015, 0.02, 0.03\} by mean development F0.5. H1 states that the chosen floor improves test F0.5.
 
@@ -96,6 +110,24 @@ A cheap tier scores every sample with three signals:
 Each signal is converted to a rank against nominal training data. A trigger above threshold $\tau$ opens an LSTM burst: 2,400 warm-up samples, then 2,100 samples of look-back before the trigger and 2,100 after it. The warm-up rebuilds the error history the threshold needs. Every sample in a burst counts as LSTM work.
 
 The LSTM is stateless given its input window, so routing can be simulated exactly from the full forecasts. The protocol picks the smallest LSTM share whose development F0.5 is within 0.01 of the always-on LSTM. H2 claims non-inferiority.
+
+\begin{table*}[t]
+\caption{All confirmatory test-set results (5 seeds, paired monthly-block bootstrap)}\label{tab:summary}
+\centering
+\begin{tabular}{lllll}
+\toprule
+Hypothesis & Comparison & Result & 95\% CI & Verdict \\
+\midrule
+H1 floor & floor 0.005 vs 0.007 & F0.5 0.818 vs 0.801 & $[-0.009, +0.055]$ & not confirmed \\
+H2 / C1 & adaptive vs always-on LSTM & F0.5 0.801 vs 0.801; LSTM share 6.4\% & $[0.000, 0.000]$ & \textbf{non-inferior} \\
+H3a / C2 & injected faults, with vs without C2 & F0.5 0.628 vs 0.341 & $[+0.223, +0.356]$ & \textbf{improvement} \\
+H3b / C2 & clean data, with vs without C2 & F0.5 0.799 vs 0.801 & $[-0.008, 0.000]$ & \textbf{non-inferior} \\
+H4 / C3 & learned graph G2 vs time-only G1 & pairwise F1 0.406 vs 0.978 & $[-0.576, -0.179]$ & worse \\
+H5 / C4 & learned policy P2 vs P0 and P1 & best at 12 of 36 grid points & --- & not supported \\
+H6 rare & telecommand gates vs baseline & F0.5 0.835 vs 0.801 & $[-0.017, +0.096]$ & not confirmed \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{C2: sensor reliability (H3a, H3b)}
 ESA-ADB has no sensor-fault labels, so we inject 50 single-channel faults per period: 10 each of stuck, drift, bias, noise and dropout. The faults last 2--24\,h, are sized in units of the channel's training standard deviation, and never overlap labelled events. The seeds are fixed in advance.
@@ -129,55 +161,21 @@ In the development period, high-priority telecommands (priority $\geq 2$) preced
 After each such command a gate opens for $W$. Inside the gate, the LSTM alarms at a lower floor $f_r$; outside gates the baseline is unchanged. We grid $p \in \{2,3\}$, $W \in \{0.5, 1, 3\}$\,h and $f_r \in \{0, 0.003, 0.005\}$ on development data. H6 states that F0.5 improves on the baseline. Telecommands are a model input that operators know in real time; they are not labels.
 
 \section{Results}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/11_c5_ablation.png}
+\caption{C5 ablation on the test period with injected sensor faults (5 seeds). A0: always-on LSTM; A4: C1; A5--A7: C1 plus one of C2--C4; A8: full system; L4: A8 with the C2 rule in place of the learned C4 policy.}
+\label{fig:c5}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/12_rare_events.png}
+\caption{Telecommand-gated rare-event path. Left: events caught and false alarms (test period, mean of 5 seeds). Right: F0.5 change against the baseline with 95\% intervals.}
+\label{fig:rare}
+\end{figure*}
+
 Table~\ref{tab:summary} summarises every test-set run.
-
-\begin{table*}[t]
-\caption{All confirmatory test-set results (5 seeds, paired monthly-block bootstrap)}\label{tab:summary}
-\centering
-\begin{tabular}{lllll}
-\toprule
-Hypothesis & Comparison & Result & 95\% CI & Verdict \\
-\midrule
-H1 floor & floor 0.005 vs 0.007 & F0.5 0.818 vs 0.801 & $[-0.009, +0.055]$ & not confirmed \\
-H2 / C1 & adaptive vs always-on LSTM & F0.5 0.801 vs 0.801; LSTM share 6.4\% & $[0.000, 0.000]$ & \textbf{non-inferior} \\
-H3a / C2 & injected faults, with vs without C2 & F0.5 0.628 vs 0.341 & $[+0.223, +0.356]$ & \textbf{improvement} \\
-H3b / C2 & clean data, with vs without C2 & F0.5 0.799 vs 0.801 & $[-0.008, 0.000]$ & \textbf{non-inferior} \\
-H4 / C3 & learned graph G2 vs time-only G1 & pairwise F1 0.406 vs 0.978 & $[-0.576, -0.179]$ & worse \\
-H5 / C4 & learned policy P2 vs P0 and P1 & best at 12 of 36 grid points & --- & not supported \\
-H6 rare & telecommand gates vs baseline & F0.5 0.835 vs 0.801 & $[-0.017, +0.096]$ & not confirmed \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-\subsection{Calibrated floor}
-Floor 0.005 was best on all five seeds in development (0.816 vs 0.776). On the test set it finds 2--3 more rare events and scores 0.818 against 0.801, but the interval includes zero. With 65 test events, a gain of about 0.02 F0.5 is within resampling noise.
-
-\subsection{C1: adaptive computation}
-At $\tau=0.999$ the router held the always-on development score at 12.3\% LSTM share (Fig.~\ref{fig:c1}). On the test set it catches exactly the same events with the same false alarms on every seed. The interval is $[0, 0]$, with the LSTM running on 6.4\% of the data (mean of 5 seeds).
-
-We measured timing on seed~42, whose routed run has 52 bursts, in a single session. Inference takes 844\,s for the always-on LSTM and 29\,s for the routed LSTM plus 12\,s for screening, an end-to-end speed-up of 20.3$\times$. At the most aggressive thresholds the novelty and impact signals matter: at $\tau=0.9999$ they keep development F0.5 at 0.752 against 0.730 for confidence alone.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/7_c1_adaptive_computation.png}
-\caption{C1. Left: development F0.5 against the share of data the LSTM runs on, for screening thresholds $\tau$ from 0.995 to 0.9999. Right: measured test-period inference time.}
-\label{fig:c1}
-\end{figure*}
-
-\subsection{C2: sensor reliability}
-The development threshold of 0.498 gives a development sensor-fault F1 of 0.949 and suppresses 3 of 114 real-event alarms. On the faulty test period, every fault the LSTM notices becomes a false system alarm and F0.5 drops to 0.341. C2 restores it to 0.628, a gain of $+0.288$ (Fig.~\ref{fig:c2}). On clean data C2 removed one real-event alarm in one of five seeds (0.799 vs 0.801).
-
-By fault type, bias, noise, drift and dropout faults are almost always alarmed and attributed (96--100\%). Stuck sensors are the weak spot: only 27 of 50 raise an LSTM alarm at all, because a frozen value can look nominal, and 20 of those 27 are attributed.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/8_c2_sensor_reliability.png}
-\caption{C2. Left: system-alarm F0.5 against real events, with and without C2. Right: outcome of each injected fault by type (test period, 5 seeds $\times$ 10 faults per type).}
-\label{fig:c2}
-\end{figure*}
-
-\subsection{C3: incident correlation}
-The test period has 22,420 channel alerts, 1,996 of them on labelled events (Table~\ref{tab:c3}). Time-only grouping (G1, $W=720$) cuts operator load from 30.2 alerts per event to 1.48 incidents, with pairwise F1 0.978. The learned graph (G2, $W=2880$, $\rho=0.1$) never merges two events (precision 1.000) but splits most real incidents (recall 0.254). Training data contains too few incidents to learn reliable links, and the development period showed the same pattern (G2 0.801 vs G1 0.897). ESA's subsystem list, used as the graph instead, does far better than the learned one (F1 0.893, precision 1.000).
 
 \begin{table}[t]
 \caption{C3 on all 76 channels, test period}\label{tab:c3}
@@ -194,6 +192,22 @@ G2 with subsystems & 0.893 & 1.64 & 1 \\
 \end{tabular}
 \end{table}
 
+\subsection{Calibrated floor}
+Floor 0.005 was best on all five seeds in development (0.816 vs 0.776). On the test set it finds 2--3 more rare events and scores 0.818 against 0.801, but the interval includes zero. With 65 test events, a gain of about 0.02 F0.5 is within resampling noise.
+
+\subsection{C1: adaptive computation}
+At $\tau=0.999$ the router held the always-on development score at 12.3\% LSTM share (Fig.~\ref{fig:c1}). On the test set it catches exactly the same events with the same false alarms on every seed. The interval is $[0, 0]$, with the LSTM running on 6.4\% of the data (mean of 5 seeds).
+
+We measured timing on seed~42, whose routed run has 52 bursts, in a single session. Inference takes 844\,s for the always-on LSTM and 29\,s for the routed LSTM plus 12\,s for screening, an end-to-end speed-up of 20.3$\times$. At the most aggressive thresholds the novelty and impact signals matter: at $\tau=0.9999$ they keep development F0.5 at 0.752 against 0.730 for confidence alone.
+
+\subsection{C2: sensor reliability}
+The development threshold of 0.498 gives a development sensor-fault F1 of 0.949 and suppresses 3 of 114 real-event alarms. On the faulty test period, every fault the LSTM notices becomes a false system alarm and F0.5 drops to 0.341. C2 restores it to 0.628, a gain of $+0.288$ (Fig.~\ref{fig:c2}). On clean data C2 removed one real-event alarm in one of five seeds (0.799 vs 0.801).
+
+By fault type, bias, noise, drift and dropout faults are almost always alarmed and attributed (96--100\%). Stuck sensors are the weak spot: only 27 of 50 raise an LSTM alarm at all, because a frozen value can look nominal, and 20 of those 27 are attributed.
+
+\subsection{C3: incident correlation}
+The test period has 22,420 channel alerts, 1,996 of them on labelled events (Table~\ref{tab:c3}). Time-only grouping (G1, $W=720$) cuts operator load from 30.2 alerts per event to 1.48 incidents, with pairwise F1 0.978. The learned graph (G2, $W=2880$, $\rho=0.1$) never merges two events (precision 1.000) but splits most real incidents (recall 0.254). Training data contains too few incidents to learn reliable links, and the development period showed the same pattern (G2 0.801 vs G1 0.897). ESA's subsystem list, used as the graph instead, does far better than the learned one (F1 0.893, precision 1.000).
+
 \subsection{C4: cost-aware response}
 The faulty test period yields 170 anomaly, 20 rare-event, 287 sensor-fault and 17 false alarms (5 seeds pooled). At the central grid point, paging everything costs 64.8 per test period, the C2 rule 17.2 and the learned policy 34.9. P1 ranks first at 24 of 36 grid points and P2 at 12. P0 never ranks first, and P1 beats it at every point.
 
@@ -209,26 +223,12 @@ Fig.~\ref{fig:c5} combines the components on the faulty test period:
 \end{itemize}
 The best combination is therefore C1 + C2 + time grouping + the C2 rule.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.95\textwidth]{figures/11_c5_ablation.png}
-\caption{C5 ablation on the test period with injected sensor faults (5 seeds). A0: always-on LSTM; A4: C1; A5--A7: C1 plus one of C2--C4; A8: full system; L4: A8 with the C2 rule in place of the learned C4 policy.}
-\label{fig:c5}
-\end{figure*}
-
 \subsection{Rare events}
 The development grid chose priority $\geq 2$, $W=3$\,h and $f_r=0.003$, raising development F0.5 from 0.776 to 0.891. The gates cover 0.4\% of the test period.
 
 On the test set (Fig.~\ref{fig:rare}) the path catches 9.8 of 36 rare events against 4, with no anomaly lost and one added false alarm. Rare-event F0.5 improves clearly: $+0.234$, 95\% CI $[+0.050, +0.488]$. The overall gain of $+0.034$ is not confirmed, however. The added false alarm counts against every category, so anomaly-only F0.5 falls by 0.029.
 
 Gates alone, without the LSTM, find 23 rare events but raise 15 false alarms. Telecommands therefore carry most of the rare-event signal, and the LSTM confirmation inside the gate is the part to improve.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/12_rare_events.png}
-\caption{Telecommand-gated rare-event path. Left: events caught and false alarms (test period, mean of 5 seeds). Right: F0.5 change against the baseline with 95\% intervals.}
-\label{fig:rare}
-\end{figure*}
 
 \section{Discussion}
 \textbf{The decision layer matters most.} Five networks that make different predictions catch identical events, and every gain we confirmed acts after the forecaster: when it runs (C1) and which alarms are trusted (C2).
