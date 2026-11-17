@@ -19,7 +19,7 @@ Institution Name, City, Country\\
 \maketitle
 
 \begin{abstract}
-Forecasting-based detectors such as Telemanom are a strong baseline for spacecraft telemetry monitoring, but they run a neural network on every reading, cannot tell a broken sensor from a real spacecraft problem, and miss most rare nominal events. We reproduce Telemanom-ESA on Mission~1 of the ESA Anomaly Detection Benchmark (ESA-ADB) and reach a corrected event-wise F0.5 of 0.801 against the published 0.776. On top of it we test six additions under a protocol fixed before any test-set run: a cheap screening tier that runs the LSTM only on demand (C1), a peer-consistency sensor-reliability layer (C2), dependency-graph incident correlation (C3), cost-aware response replay (C4), a calibrated error floor, and a telecommand-gated rare-event path. Every method is tuned on a labelled development period and run once on the 2007--2013 test set, with paired monthly-block bootstrap intervals over five seeds. C1 matches the baseline exactly while running the LSTM on 6.4\% of the data, a 20.3$\times$ end-to-end speed-up. On data with injected sensor faults, C2 raises F0.5 from 0.341 to 0.628 (95\% CI $[+0.22, +0.36]$) and does no harm on clean data. The learned graph and the learned response policy both lose to simpler alternatives, and the telecommand gates more than double rare-event detections without a confirmed overall gain. We report all results, including the negative ones.
+Forecasting-based detectors such as Telemanom are a strong baseline for spacecraft telemetry monitoring, but they run a neural network on every reading, cannot tell a broken sensor from a real spacecraft problem, and miss most rare nominal events. We reproduce Telemanom-ESA on Mission~1 of the ESA Anomaly Detection Benchmark (ESA-ADB) and reach a corrected event-wise F0.5 of 0.801 against the published 0.776. On top of it we test six additions under a protocol fixed before any test-set run: a cheap screening tier that runs the LSTM only on demand (C1), a peer-consistency sensor-reliability layer (C2), dependency-graph incident correlation (C3), cost-aware response replay (C4), a calibrated error floor, and a telecommand-gated rare-event path. Every method is tuned on a labelled development period and run once on the 2007--2013 test set, with paired monthly-block bootstrap intervals over five seeds. C1 matches the baseline exactly while running the LSTM on 6.4\% of the data, a 20.3$\times$ end-to-end speed-up. On data with injected sensor faults, C2 raises F0.5 from 0.341 to 0.628 (95\% CI $[+0.22, +0.36]$) and does no harm on clean data. The learned graph and the learned response policy both lose to simpler alternatives, and the telecommand gates more than double rare-event detections without a confirmed overall gain. None of these problems is addressed by four recent IEEE works on satellite telemetry anomaly detection, which improve the detector itself. We report all results, including the negative ones.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -36,17 +36,17 @@ This paper reports a complete evaluation of additions aimed at these gaps. Our c
 \item A verified PyTorch reproduction of Telemanom-ESA on ESA-ADB Mission~1, scored with the official metric code, over five training seeds and two training lengths.
 \item \textbf{C1, adaptive computation:} a cheap screening tier that sends only flagged bursts of telemetry to the LSTM. It is confirmed non-inferior, with a 20.3$\times$ speed-up.
 \item \textbf{C2, sensor reliability:} a peer-consistency classifier that separates sensor faults from system events. It is confirmed on injected faults.
-\item \textbf{C3--C4 and two further hypotheses:} incident correlation, cost-aware response, a calibrated floor and a telecommand-gated rare-event path. None beats its simpler comparison under the protocol. We report them with the same detail as the confirmed results.
+\item \textbf{C3, C4 and two further hypotheses} (a calibrated floor and telecommand-gated rare events): none beats its simpler comparison, and all are reported in full.
 \item \textbf{C5:} an ablation of the combined pipeline that identifies which parts carry the gains.
 \end{itemize}
-All designs, tuning grids and decision rules were committed to a dated protocol before their test runs. Each test was run once and logged.
+Table~\ref{tab:novelty} shows that none of four recent IEEE works on telemetry anomaly detection addresses compute cost, sensor faults, alert grouping, response choice or telecommands. All designs, tuning grids and decision rules were committed to a dated protocol before their test runs. Each test was run once and logged.
 
 \section{Related Work}
 Telemanom~\cite{hundman2018telemanom} forecasts telemetry with an LSTM and flags anomalies with a nonparametric dynamic threshold on smoothed errors. ESA-ADB~\cite{kotowski2024esaadb} provides three ESA missions with labelled anomalies and rare events, telecommands, a time-aware evaluation pipeline, and published results for Telemanom-ESA and its ``Pruned'' variant.
 
 Zeng et al.~\cite{zeng2022causal} combine a transfer-entropy causal network between telemetry parameters with a feature-attention LSTM and a dynamic $k$-sigma threshold. Their causal network motivates our dependency-graph grouping (C3). Xu et al.~\cite{xu2023taae} propose a temporal-attention LSTM autoencoder with a Mahalanobis anomaly score, an adaptive threshold and per-parameter attribution, which relates to our sensor-level attribution (C2). Zhang and Hu~\cite{zhang2025fouriergat} model cross-channel and temporal structure with a Fourier graph attention network. Mathur et al.~\cite{mathur2026adeptrs} study the robustness of telemetry detectors under evasion and poisoning attacks on the OPS-SAT data. They use a consistency gate to separate attacks from anomalies, a different aspect of trustworthy monitoring.
 
-These works improve the forecaster or the anomaly score. Our seed study (Section~\ref{sec:repro}) shows that on ESA-ADB the decision layer after the forecaster decides which events are caught, so we target that layer, its compute cost and its trust in the sensors.
+These works improve the forecaster or the anomaly score. Our seed study (Section~\ref{sec:repro}) shows that the decision layer after the forecaster decides which events are caught, so we target that layer.
 
 Table~\ref{tab:novelty} compares the problems each work addresses, as stated in their abstracts. None of the four reduces the detector's compute cost, separates sensor faults from spacecraft events, groups alerts into incidents, chooses a response, or uses telecommands. We also evaluate on a public benchmark with its official metric and fix every design before its test run.
 
@@ -113,7 +113,7 @@ We follow the official ESA-ADB preparation script. The raw telemetry is irregula
 Fig.~\ref{fig:data} shows four properties that shape the methods.
 \begin{itemize}
 \item \emph{Rare labels:} only 0.9--2.6\% of rows are labelled in any split.
-\item \emph{Drifting levels:} the channels drift slowly and shift level, for example in 2009, which motivates the novelty signal in C1 and the calibrated floor.
+\item \emph{Drifting levels:} the channels drift and shift level (e.g., 2009), which motivates C1's novelty signal.
 \item \emph{Two kinds of events:} 29 of the 51 anomalies last under two minutes (median 13 seconds), while rare events last much longer (median about 1.5 hours). Point anomalies are easy for an error threshold, but long, low-amplitude rare events are not.
 \item \emph{Shared events:} 62 of the 65 test events involve all six channels at once, so a single channel disagreeing with its five peers points to a sensor fault (C2).
 \end{itemize}
@@ -141,12 +141,12 @@ Training & Variant & Ours & Paper~\cite{kotowski2024esaadb} \\
 \subsection{Evaluation protocol}
 The 21-month models never see 2001-10 to 2006-12. This labelled period (33 events) serves as a development set for all tuning, and the test period is used once per hypothesis. The primary metric is corrected event-wise F0.5 over anomalies and rare events, averaged over seeds 42, 1, 2, 3 and 4.
 
-For intervals we split the test period into 85 calendar months and decompose the metric into per-month counts: detected and missed events, false-alarm events and false-alarm time. We then resample months with replacement~\cite{kunsch1989block,efron1993bootstrap}, 5,000 times, scoring both systems on the same resample. The decomposition reproduces the official scores exactly.
+For intervals we split the test period into 85 calendar months and decompose the metric into per-month counts: detected and missed events, false-alarm events and false-alarm time. We then resample months with replacement~\cite{kunsch1989block}, 5,000 times, scoring both systems on the same resample. The decomposition reproduces the official scores exactly.
 \begin{itemize}
 \item \emph{Improvement claim:} the whole 95\% interval of the difference lies above zero.
 \item \emph{Non-inferiority claim:} for compute-saving methods, the lower bound must lie above $-0.02$.
 \end{itemize}
-The protocol names Holm's correction~\cite{holm1979} across hypotheses. We report unadjusted intervals. Both confirmed results lie far from their decision boundaries.
+The protocol names Holm's correction~\cite{holm1979}; we report unadjusted intervals, as both confirmed results lie far from their boundaries.
 
 \section{Methods}
 \begin{figure*}[t]
@@ -301,13 +301,13 @@ Gates alone, without the LSTM, find 23 rare events but raise 15 false alarms. Te
 
 \textbf{Simple baselines are strong.} Time-only grouping beat the learned graph, and a one-line ticket rule beat the learned cost model.
 
-\textbf{Small event counts limit claims.} With 65 test events, effects of about 0.02--0.03 F0.5 (the calibrated floor, the rare-event path) cannot be confirmed even when they appear on every seed. Larger channel sets or further missions are needed to settle them.
+\textbf{Small event counts limit claims.} With 65 test events, gains of 0.02--0.03 F0.5 (calibrated floor, rare-event path) cannot be confirmed even when every seed shows them.
 
 \section{Limitations}
 The LSTM results cover one six-channel group of one mission. Sensor faults are injected by a simple generator also used for development, so C2's result is likely optimistic for real failures. C4 depends on a declared cost grid, not measured costs. Channels and telecommands are anonymised, so learned dependencies are statistical, not physical. Our PyTorch port differs numerically from the original, which shows in the unpruned variant, and timings come from a single laptop.
 
 \section{Conclusion}
-We reproduced Telemanom-ESA on ESA-ADB and tested six additions under a pre-registered protocol. Adaptive computation keeps detection unchanged while running the LSTM on 6.4\% of the data, 20.3$\times$ faster. A peer-consistency sensor-reliability layer nearly doubles F0.5 when sensors fail, without harming clean data. Learned incident graphs and learned response policies did not beat simpler alternatives. Telecommand gating more than doubled rare-event detections, but its overall gain is not confirmed. Code, protocol, test log and results are available at \url{https://github.com/VONVOLT6/satmon-esa}.
+We reproduced Telemanom-ESA on ESA-ADB and tested six additions under a pre-registered protocol. Adaptive computation keeps detection unchanged while running the LSTM on 6.4\% of the data, 20.3$\times$ faster. A peer-consistency sensor-reliability layer nearly doubles F0.5 when sensors fail, without harming clean data. Learned incident graphs and learned response policies did not beat simpler alternatives. Telecommand gating more than doubled rare-event detections, but its overall gain is not confirmed. Unlike four recent IEEE works, which improve the detector itself, these additions target what happens around it: compute, sensor trust, alert handling and response. Code, protocol, test log and results are available at \url{https://github.com/VONVOLT6/satmon-esa}.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
