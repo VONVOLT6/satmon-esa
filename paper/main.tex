@@ -72,7 +72,7 @@ Test & 2007-01 -- 2013-12 & 7,364,161 & 1.8\% & 29 & 36 \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/0_data_overview.png}
+\includegraphics[width=0.8\textwidth]{figures/0_data_overview.png}
 \caption{Data overview. Left: daily means of channels 41--46 over the whole mission, z-scored with the 21-month training statistics. Labelled anomalies (orange) and rare events (blue) are shaded, and dashed lines mark the development and test splits. Right: event durations for 2000--2013, with point events shown at 1 minute.}
 \label{fig:data}
 \end{figure*}
@@ -80,7 +80,7 @@ Test & 2007-01 -- 2013-12 & 7,364,161 & 1.8\% & 29 & 36 \\
 \subsection{Preprocessing}
 We follow the official ESA-ADB preparation script. The raw telemetry is irregularly sampled, so the preparation proceeds in five steps:
 \begin{itemize}
-\item \emph{Resampling:} each channel is resampled onto the benchmark's 30-second grid by zero-order hold, carrying the last value forward. When a 30-second bin contains a labelled sample but ends on a nominal one, the labelled sample is kept, so short events survive resampling. The six channels are aligned on one grid, and leading gaps are back-filled. Our 21-month training set has exactly the 1,840,321 rows listed in the official \texttt{datasets.csv}.
+\item \emph{Resampling:} each channel is resampled onto the benchmark's 30-second grid by zero-order hold, carrying the last value forward. When a 30-second bin contains a labelled sample but ends on a nominal one, the labelled sample is kept, so short events survive resampling. The six channels are aligned on one grid, and leading gaps are back-filled. Our 21-month training set has exactly the 1,840,321 rows that the benchmark lists for it.
 \item \emph{Labels:} each sample and channel is marked nominal, anomaly or rare event.
 \item \emph{Clean training data:} training is semi-supervised. The LSTM sees only nominal stretches in which no channel is labelled, so the 47,360 labelled training rows (2.6\%) are removed. The remaining nominal stretches give 1,528,091 rows for training and 264,871 rows for validation (the last three months, from 2001-07-01).
 \item \emph{Scaling:} each channel is standardised with the mean and standard deviation of the training fragments.
@@ -129,14 +129,14 @@ The protocol names Holm's correction~\cite{holm1979} across hypotheses. We repor
 \section{Methods}
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/7_c1_adaptive_computation.png}
+\includegraphics[width=0.8\textwidth]{figures/7_c1_adaptive_computation.png}
 \caption{C1. Left: development F0.5 against the share of data the LSTM runs on, for screening thresholds $\tau$ from 0.995 to 0.9999. Right: measured test-period inference time.}
 \label{fig:c1}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/8_c2_sensor_reliability.png}
+\includegraphics[width=0.8\textwidth]{figures/8_c2_sensor_reliability.png}
 \caption{C2. Left: system-alarm F0.5 against real events, with and without C2. Right: outcome of each injected fault by type (test period, 5 seeds $\times$ 10 faults per type).}
 \label{fig:c2}
 \end{figure*}
@@ -207,14 +207,14 @@ After each such command a gate opens for $W$. Inside the gate, the LSTM alarms a
 \section{Results}
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/11_c5_ablation.png}
+\includegraphics[width=0.8\textwidth]{figures/11_c5_ablation.png}
 \caption{C5 ablation on the test period with injected sensor faults (5 seeds). A0: always-on LSTM; A4: C1; A5--A7: C1 plus one of C2--C4; A8: full system; L4: A8 with the C2 rule in place of the learned C4 policy.}
 \label{fig:c5}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.88\textwidth]{figures/12_rare_events.png}
+\includegraphics[width=0.8\textwidth]{figures/12_rare_events.png}
 \caption{Telecommand-gated rare-event path. Left: events caught and false alarms (test period, mean of 5 seeds). Right: F0.5 change against the baseline with 95\% intervals.}
 \label{fig:rare}
 \end{figure*}
