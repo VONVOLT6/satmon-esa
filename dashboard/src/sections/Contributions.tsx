@@ -53,6 +53,52 @@ const CARDS: { code: string; name: string; icon: typeof Cpu; status: string; ton
   },
 ];
 
+const PAPERS = ["Zeng et al. 2022 · IEEE TIM", "Xu et al. 2023 · IEEE TIM", "Zhang & Hu 2025 · IEEE CCECE", "Mathur et al. 2026 · IEEE IGARSS"];
+const GAPS: { problem: string; theirs: (string | null)[]; ours: string }[] = [
+  { problem: "Cut the detector's computing cost", theirs: [null, null, null, null], ours: `C1: same F0.5, LSTM on ${pct(c1.lstm_share)} of data, ${c1.timing.speedup_total.toFixed(1)}× faster` },
+  { problem: "Tell a broken sensor from a real spacecraft problem", theirs: [null, "partly: finds the parameters behind an anomaly", null, "partly: separates adversarial attacks"], ours: `C2: F0.5 ${fmt(c2.injected.A)} → ${fmt(c2.injected.B)} when sensors fail` },
+  { problem: "Group alerts into incidents", theirs: [null, null, null, null], ours: `C3: ${c3.methods.G0.incidents_per_event.toFixed(1)} alerts per event → ${c3.methods.G1.incidents_per_event.toFixed(2)} incidents` },
+  { problem: "Choose a response (page, ticket or ignore)", theirs: [null, null, null, null], ours: `C4: response cost ${c4.central.P0.toFixed(1)} → ${c4.central.P1.toFixed(1)}` },
+  { problem: "Use telecommands to catch rare events", theirs: [null, null, null, null], ours: `H6: rare events ${h6.caught.B0.rare.toFixed(0)} → ${h6.caught.R.rare.toFixed(1)} of 36` },
+  { problem: "Fix every design before a single test run", theirs: [null, null, null, null], ours: "All contributions, with 95% confidence intervals" },
+];
+
+function IeeeGaps() {
+  return (
+    <Panel eyebrow="What is new" title="What this project does that the four related IEEE papers do not">
+      <p className="mb-3 text-sm leading-relaxed text-slate-300">
+        The related IEEE papers improve the anomaly detector itself: a causal-network LSTM, an attention autoencoder, a Fourier graph attention network and an
+        attack-resistant detector. None of them addresses the problems below, which are this project's contributions.
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[820px] text-sm">
+          <thead>
+            <tr className="border-b border-cyan-300/10 text-left text-xs uppercase tracking-wide text-slate-400">
+              <th className="py-2 pr-3">Problem</th>
+              <th className="py-2 pr-3 text-cyan-300">This project</th>
+              {PAPERS.map((p) => <th key={p} className="py-2 pr-3 font-medium normal-case tracking-normal">{p}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {GAPS.map((g) => (
+              <tr key={g.problem} className="border-b border-white/5 align-top">
+                <td className="py-2 pr-3 text-slate-200">{g.problem}</td>
+                <td className="py-2 pr-3 font-medium text-emerald-300">{g.ours}</td>
+                {g.theirs.map((t, i) => (
+                  <td key={i} className="py-2 pr-3 text-xs">
+                    {t ? <span className="text-amber-200/80">{t}</span> : <span className="text-slate-500">no</span>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-xs text-slate-500">"no" means the paper's published abstract does not describe it (checked by DOI, 2026-11-17).</p>
+    </Panel>
+  );
+}
+
 export default function Contributions({ id, letter, title }: SectionProps) {
   const floorRows = h1.floors.map((f, i) => ({ floor: f, "Development F0.5": h1.dev_f05[i] }));
   return (
@@ -62,6 +108,8 @@ export default function Contributions({ id, letter, title }: SectionProps) {
         bootstrap over test months and 5 training seeds. "Not confirmed" means the point estimate is better but the interval includes zero. "Not supported" means the
         proposed method did not beat a simpler alternative. Negative results are reported, not hidden.
       </div>
+
+      <IeeeGaps />
 
       <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {CARDS.map(({ code, name, icon: Icon, status, tone, headline, detail, where }) => (

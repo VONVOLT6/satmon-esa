@@ -4,11 +4,26 @@
 
 This experiment trains the Telemanom-ESA anomaly detector on the ESA Anomaly Detection Benchmark (ESA-ADB) and compares it with the published results.
 
-The aim is a verified baseline. Our later contributions (adaptive computation, sensor reliability, incident correlation and response planning) will be measured against it.
+The aim is a verified baseline. Our contributions (adaptive computation, sensor reliability, incident correlation, response planning and rare events) are measured against it in sections 12-19.
 
 > **Comparing with other experiments.** These scores are only comparable with results that use the same protocol: ESA-ADB **Mission 1, channels 41-46**, the **official chronological split** (training before 2007, test 2007-2013) and the **official event-wise metrics** (`ESAScores`, corrected event-wise F0.5).
 >
 > Results on another mission or channel, a random or percentage split, or sample-level precision/recall/F1/PR-AUC measure a different task. They cannot be ranked against the numbers here. Sample-level F1 counts every 30-second point separately. Event-wise F0.5 counts whole anomaly events and weights false alarms more heavily.
+
+### What this project adds to the related IEEE work
+
+The four related IEEE papers (section 6) improve the anomaly detector itself. None of them addresses the problems below, which are this project's contributions:
+
+| Problem | This project | Zeng et al. 2022 (IEEE TIM) | Xu et al. 2023 (IEEE TIM) | Zhang & Hu 2025 (IEEE CCECE) | Mathur et al. 2026 (IEEE IGARSS) |
+|---|---|---|---|---|---|
+| Cut the detector's computing cost | **C1:** same F0.5 with the LSTM on 6.4% of the data, 20.3× faster | no | no | no | no |
+| Tell a broken sensor apart from a real spacecraft problem | **C2:** F0.5 0.341 → 0.628 when sensors fail, no harm on clean data | no | partly: finds the parameters behind an anomaly, not whether the sensor failed | no | partly: separates adversarial attacks from anomalies, not sensor faults |
+| Group alerts into incidents | **C3:** 30.2 alerts per event → 1.48 incidents | no | no | no | no |
+| Choose a response (page, ticket or ignore) | **C4:** response cost 64.8 → 17.2 with the C2 rule | no | no | no | no |
+| Use telecommands to catch rare events | **H6:** rare events caught 4 → 9.8 of 36 | no | no | no | no |
+| Fix every design before a single test run, with confidence intervals | all of the above | no | no | no | no |
+
+"no" means the paper's abstract does not describe it; the comparison is based on each paper's published abstract (looked up by DOI on 2026-11-17).
 
 ## 2. Dataset
 
@@ -128,7 +143,7 @@ At 21 months, training stopped after 37 to 58 epochs and took 5.5 to 10.5 minute
 
 ## 6. Related IEEE Papers
 
-Three IEEE papers on satellite telemetry anomaly detection that our project builds on and combines:
+IEEE papers on satellite telemetry anomaly detection that our project builds on. Each improves how anomalies are detected. None addresses compute cost, sensor faults against real events, alert grouping, response choice or telecommands; that is where our contributions sit (table in section 1):
 
 | # | IEEE paper | What it does | What we take from it |
 |---|---|---|---|
@@ -374,7 +389,7 @@ Full numbers: `results/h4_result.json`, `results/c3_dev.json`.
 | Rare-event path (telecommand gates) | H6 | F0.5 0.835 vs 0.801, 95% CI [-0.017, +0.096]; rare events caught 4 → 9.8 of 36, at the cost of 1 false alarm | Not confirmed (see section 19) |
 | C5 ablation | descriptive | C1 + C2 + time grouping + the C2 ticket rule (L4) is the best combination: F0.5 0.628 vs 0.341, LSTM on 11.9%, 8% fewer operator items, cost 17.2 vs 64.8 | See section 18 |
 
-Every test-set run is listed in `results/test_log.md`. Each was run once, after its design was committed in `PROTOCOL.md`.
+Every contribution above addresses a problem that none of the four related IEEE papers addresses (see the table in section 1). Every test-set run is listed in `results/test_log.md`. Each was run once, after its design was committed in `PROTOCOL.md`.
 
 ## 18. Update (2026-11-10): ablation of the combined system (C5)
 

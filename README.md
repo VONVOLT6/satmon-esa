@@ -13,6 +13,21 @@ The project first reproduces the paper's Telemanom-ESA model on Mission 1 (chann
 | C5 ablation | Best combination: C1 + C2 + time grouping + C2 rule | Descriptive |
 | Rare-event path (telecommand gates) | Rare events caught 4 → 9.8 of 36; overall F0.5 0.801 → 0.835, 95% CI includes 0 | Not confirmed |
 
+### What is new compared with the related IEEE papers
+
+Four recent IEEE papers on satellite telemetry anomaly detection (Zeng et al. 2022 and Xu et al. 2023 in IEEE TIM, Zhang & Hu 2025 at IEEE CCECE, Mathur et al. 2026 at IEEE IGARSS) improve the detector itself. This project tackles what they do not:
+
+| Problem | This project | Zeng et al. 2022 (IEEE TIM) | Xu et al. 2023 (IEEE TIM) | Zhang & Hu 2025 (IEEE CCECE) | Mathur et al. 2026 (IEEE IGARSS) |
+|---|---|---|---|---|---|
+| Cut the detector's computing cost | **C1:** same F0.5 with the LSTM on 6.4% of the data, 20.3× faster | no | no | no | no |
+| Tell a broken sensor apart from a real spacecraft problem | **C2:** F0.5 0.341 → 0.628 when sensors fail, no harm on clean data | no | partly: finds the parameters behind an anomaly, not whether the sensor failed | no | partly: separates adversarial attacks from anomalies, not sensor faults |
+| Group alerts into incidents | **C3:** 30.2 alerts per event → 1.48 incidents | no | no | no | no |
+| Choose a response (page, ticket or ignore) | **C4:** response cost 64.8 → 17.2 with the C2 rule | no | no | no | no |
+| Use telecommands to catch rare events | **H6:** rare events caught 4 → 9.8 of 36 | no | no | no | no |
+| Fix every design before a single test run, with confidence intervals | all of the above | no | no | no | no |
+
+"no" means the paper's abstract does not describe it; the comparison is based on each paper's published abstract (looked up by DOI on 2026-11-17).
+
 Full write-up with charts: [RESULTS.md](RESULTS.md). Conference paper draft (IEEE format): [paper/](paper/README.md). Every test-set run: [results/test_log.md](results/test_log.md).
 
 ## What is here

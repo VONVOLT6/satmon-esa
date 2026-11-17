@@ -47,7 +47,8 @@ export default function MissionControl({ onOpenResearch }: { onOpenResearch: () 
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-slate-300">
             A satellite streams thousands of sensor readings to the ground. We trained a forecasting neural network on real European Space
             Agency (ESA) telemetry to flag readings that stop behaving normally, while keeping false alarms rare. We reproduced the published
-            benchmark result, then tested trust-aware, resource-efficient additions on top of it: running the network 20× less often at the same accuracy, and telling broken sensors apart from real problems.
+            benchmark result, then tested trust-aware, resource-efficient additions on top of it: running the network 20× less often at the same accuracy, and telling broken sensors apart from real problems. These are problems
+            that four recent IEEE papers on satellite telemetry do not address.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
