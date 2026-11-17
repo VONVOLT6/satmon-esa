@@ -2,6 +2,7 @@ import { BrainCircuit, CheckCircle2, Database, FlaskConical, Ruler } from "lucid
 import { Chip, Panel, Section } from "../components/ui";
 import { dataset, label, SEEDS, totalTestEvents } from "../data/model";
 import type { SectionProps } from "./types";
+import DataPanel from "./DataPanel";
 
 const n = (x: number) => x.toLocaleString("en-US");
 
@@ -55,6 +56,8 @@ export default function Overview({ id, letter, title }: SectionProps) {
           </ul>
         </Panel>
       </div>
+
+      <DataPanel />
 
       <Panel eyebrow="Evaluation" title="How results are judged" right={<Ruler className="h-5 w-5 text-cyan-300/70" />}>
         <div className="grid gap-4 text-sm md:grid-cols-3">

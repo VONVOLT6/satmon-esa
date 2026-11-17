@@ -22,7 +22,8 @@ For a static build: `npm run build`, then `npm run preview`.
 All values are read from `src/data/results.json`. Nothing is typed into the components. That file is generated from the saved experiment outputs (`results/*.json`, `models/*/train_summary.json` and `history.json`, the evaluation logs, `results/figures/tables.json` and `results/diagnose_unpruned.csv`).
 
 ```bash
-npm run data       # runs ../src/export_dashboard_data.py (sections A-G) and ../src/export_contributions_data.py (sections H-N)
+npm run data       # runs ../src/export_dashboard_data.py (sections A-G), ../src/export_contributions_data.py (sections H-N)
+                   # and ../src/export_data_overview.py (data panel in section A; needs ../src/data_summary.py run first)
 ```
 
 Sections H-N read `src/data/contributions.json`, built from the test and development result files (`results/h1_result.json` ... `h6_result.json`, `c5_result.json` and the development JSONs).
